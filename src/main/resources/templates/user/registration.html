@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org">
+
+<head>
+	<title>Register new account</title>
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+  	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+</head>
+
+<body>
+<form action="#" th:action="@{/user/registration}" th:object="${user}" method="post">
+    <div>
+        <label>Email</label>
+        <input type="email" th:field="*{email}"/>
+    </div>
+    <div>
+        <label>Password</label>
+        <input type="password" th:field="*{password}"/>
+    </div>
+    <!-- todo: confirmation password input -->
+    <button type="submit">Register</button>
+</form>
+ 
+</body>
+</html>

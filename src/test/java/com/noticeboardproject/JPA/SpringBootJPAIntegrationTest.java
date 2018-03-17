@@ -34,27 +34,40 @@ public class SpringBootJPAIntegrationTest {
  
     @Test
     public void givenUserRepository_whenSaveAndRetreiveEntity_thenOK() {
-    	Privilege privilege = new Privilege();
-    	privilege.setPrivilege("privilege");
+    	Privilege privilege1 = new Privilege();
+    	privilege1.setPrivilege("privilege1");
     	
-    	Role role = new Role();
-    	role.setRole("role");
+    	Role role1 = new Role();
+    	role1.setRole("role1");
     	
     	User user = new User();
     	user.setEmail("email@gmail.com");
     	user.setPassword("pass");
     	
-    	role.setPrivileges(Arrays.asList(privilege));
-    	privilege.setRoles(Arrays.asList(role));
-    	user.setRoles(Arrays.asList(role));
-    	role.setUsers(Arrays.asList(user));
-    	privilegeRepository.save(privilege);
-    	roleRepository.save(role);
+    	role1.setPrivileges(Arrays.asList(privilege1));
+    	privilege1.setRoles(Arrays.asList(role1));
+    	user.setRoles(Arrays.asList(role1));
+    	role1.setUsers(Arrays.asList(user));
+    	privilegeRepository.save(privilege1);
+    	roleRepository.save(role1);
     	User savedUser = userRepository.save(user);
     	User retrievedUser = userRepository.findById(savedUser.getId()).get();
   
         assertNotNull(retrievedUser);
         assertEquals(savedUser.getEmail(), retrievedUser.getEmail());
         assertEquals(savedUser.getPassword(), retrievedUser.getPassword());
+        assertEquals(savedUser.getId(), retrievedUser.getId());
+        java.util.List<Role> savedRoles = savedUser.getRoles();
+        java.util.List<Role> retrievedRoles = retrievedUser.getRoles();
+        assertEquals(savedRoles.size(), retrievedRoles.size());
+        
+        for(int i=0; i<savedRoles.size(); i++) {
+        	assertEquals(savedRoles.get(i).getRole(), retrievedRoles.get(i).getRole());
+        	assertEquals(savedRoles.get(i).getPrivileges().size(), retrievedRoles.get(i).getPrivileges().size());
+        	for(int j=0; j<savedRoles.get(i).getPrivileges().size(); j++) {
+        		assertEquals(savedRoles.get(i).getPrivileges().get(j).getPrivilege(), retrievedRoles.get(i).getPrivileges().get(j).getPrivilege());
+        	}
+        }
+        
     }
 }
