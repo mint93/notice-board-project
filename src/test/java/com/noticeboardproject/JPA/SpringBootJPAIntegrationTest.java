@@ -1,9 +1,12 @@
 package com.noticeboardproject.JPA;
 
+import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 
 import java.util.Arrays;
+import java.util.HashSet;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -34,22 +37,32 @@ public class SpringBootJPAIntegrationTest {
  
     @Test
     public void givenUserRepository_whenSaveAndRetreiveEntity_thenOK() {
+
     	Privilege privilege1 = new Privilege();
     	privilege1.setPrivilege("privilege1");
+    	Privilege privilege2 = new Privilege();
+    	privilege2.setPrivilege("privilege2");
     	
     	Role role1 = new Role();
     	role1.setRole("role1");
+    	Role role2 = new Role();
+    	role2.setRole("role2");
     	
     	User user = new User();
     	user.setEmail("email@gmail.com");
     	user.setPassword("pass");
     	
-    	role1.setPrivileges(Arrays.asList(privilege1));
-    	privilege1.setRoles(Arrays.asList(role1));
-    	user.setRoles(Arrays.asList(role1));
-    	role1.setUsers(Arrays.asList(user));
+    	role1.setPrivileges(new HashSet<>(Arrays.asList(privilege1, privilege2)));
+    	role2.setPrivileges(new HashSet<>(Arrays.asList(privilege1, privilege2)));
+    	privilege1.setRoles(new HashSet<>(Arrays.asList(role1, role2)));
+    	privilege2.setRoles(new HashSet<>(Arrays.asList(role1, role2)));
+    	user.setRoles(new HashSet<>(Arrays.asList(role1, role2)));
+    	role1.setUsers(new HashSet<>(Arrays.asList(user)));
+    	role2.setUsers(new HashSet<>(Arrays.asList(user)));
     	privilegeRepository.save(privilege1);
+    	privilegeRepository.save(privilege2);
     	roleRepository.save(role1);
+    	roleRepository.save(role2);
     	User savedUser = userRepository.save(user);
     	User retrievedUser = userRepository.findById(savedUser.getId()).get();
   
@@ -57,17 +70,22 @@ public class SpringBootJPAIntegrationTest {
         assertEquals(savedUser.getEmail(), retrievedUser.getEmail());
         assertEquals(savedUser.getPassword(), retrievedUser.getPassword());
         assertEquals(savedUser.getId(), retrievedUser.getId());
-        java.util.List<Role> savedRoles = savedUser.getRoles();
-        java.util.List<Role> retrievedRoles = retrievedUser.getRoles();
+        java.util.Set<Role> savedRoles = savedUser.getRoles();
+        java.util.Set<Role> retrievedRoles = retrievedUser.getRoles();
         assertEquals(savedRoles.size(), retrievedRoles.size());
         
-        for(int i=0; i<savedRoles.size(); i++) {
-        	assertEquals(savedRoles.get(i).getRole(), retrievedRoles.get(i).getRole());
-        	assertEquals(savedRoles.get(i).getPrivileges().size(), retrievedRoles.get(i).getPrivileges().size());
-        	for(int j=0; j<savedRoles.get(i).getPrivileges().size(); j++) {
-        		assertEquals(savedRoles.get(i).getPrivileges().get(j).getPrivilege(), retrievedRoles.get(i).getPrivileges().get(j).getPrivilege());
-        	}
+        boolean contain = false;
+        assertArrayEquals(savedRoles.toArray(), retrievedRoles.toArray());
+        for(Role savedRole : savedRoles) {
+        	for(Role retrievedRole : retrievedRoles) {
+            	if(savedRole.getPrivileges().containsAll(retrievedRole.getPrivileges())) {
+            		assertEquals(savedRole.getPrivileges(), retrievedRole.getPrivileges());
+            		contain = true;
+            		break;
+            	}
+            }
+        	assertTrue(contain);
+        	contain=false;
         }
-        
     }
 }
