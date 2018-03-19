@@ -7,4 +7,6 @@ import com.noticeboardproject.domain.Role;
 
 @Repository
 public interface RoleRepository extends JpaRepository<Role, Long>{
+
+	Role findByRole(String string);
 }

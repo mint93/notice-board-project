@@ -1,6 +1,7 @@
 package com.noticeboardproject.services;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.fail;
 
 import javax.transaction.Transactional;
 
@@ -14,6 +15,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 import com.noticeboardproject.commands.UserCommand;
 import com.noticeboardproject.converters.UserCommandToUser;
 import com.noticeboardproject.converters.UserToUserCommand;
+import com.noticeboardproject.exceptions.EmailExistsException;
 import com.noticeboardproject.repositories.UserRepository;
 
 @RunWith(SpringRunner.class)
@@ -32,6 +34,9 @@ public class UserServiceIntegrationTest {
 	@Autowired
 	UserCommandToUser userCommandToUser;
 
+	private final String EMAIL = "email";
+	private final String PASSWORD = "password";
+	
 	@Before
 	public void setUp() throws Exception {
 	}
@@ -41,18 +46,39 @@ public class UserServiceIntegrationTest {
 	public void registerNewUserCommand() {
 		//given
 		UserCommand userCommand = new UserCommand();
-		userCommand.setEmail("email");
-		userCommand.setPassword("pass");
-		userCommand.setMatchingPassword("pass");
+		userCommand.setEmail(EMAIL);
+		userCommand.setPassword(PASSWORD);
+		userCommand.setMatchingPassword(PASSWORD);
 		
 		//when
-		UserCommand registeredUserCommand = userService.registerNewUserCommand(userCommand);
+		UserCommand registeredUserCommand=null;
+		try {
+			registeredUserCommand = userService.registerNewUserCommand(userCommand);
+		} catch (EmailExistsException e) {
+			e.printStackTrace();
+			fail();
+		}
 		
 		//then
-		assertEquals("email", registeredUserCommand.getEmail());
-		assertEquals("pass", registeredUserCommand.getPassword());
-		assertEquals("pass", registeredUserCommand.getMatchingPassword());
+		assertEquals(EMAIL, registeredUserCommand.getEmail());
+		assertEquals(PASSWORD, registeredUserCommand.getPassword());
+		assertEquals(PASSWORD, registeredUserCommand.getMatchingPassword());
 		
+	}
+	
+	@Transactional
+	@Test(expected=EmailExistsException.class)
+	public void registerNewExistingUserCommand() throws EmailExistsException {
+		//given
+		UserCommand userCommand = new UserCommand();
+		userCommand.setEmail(EMAIL);
+		userCommand.setPassword(PASSWORD);
+		userCommand.setMatchingPassword(PASSWORD);
+		
+		userRepository.save(userCommandToUser.convert(userCommand));
+		
+		//when
+		userService.registerNewUserCommand(userCommand);
 	}
 
 }

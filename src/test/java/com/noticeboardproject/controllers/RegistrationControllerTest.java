@@ -24,6 +24,7 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.servlet.view.InternalResourceViewResolver;
 
 import com.noticeboardproject.commands.UserCommand;
+import com.noticeboardproject.exceptions.EmailExistsException;
 import com.noticeboardproject.services.UserService;
 
 public class RegistrationControllerTest {
@@ -59,26 +60,121 @@ public class RegistrationControllerTest {
 	}
 	
 	@Test
-	public void registerUserAccount() throws Exception {
+	public void givenCorrectUser_whenRegisterUser_thenUserRegusteredAndNoValidationErrors() throws EmailExistsException, Exception {
+		String email = "email@gmail.com";
+		String password = "password1234";
+		String matchingPassword = "password1234";
+		
 		UserCommand userCommand = new UserCommand();
-		userCommand.setEmail("email");
-		userCommand.setPassword("pass");
-		userCommand.setMatchingPassword("pass");
+		userCommand.setEmail(email);
+		userCommand.setPassword(password);
+		userCommand.setMatchingPassword(password);
 		
 		when(userService.registerNewUserCommand(any(UserCommand.class))).thenReturn(userCommand);
 		
 		mockMvc.perform(post("/user/registration")
 				.contentType(MediaType.APPLICATION_FORM_URLENCODED)
-				.param("email", "someemail")
-				.param("password", "1234")
-				.param("matchingPassword", "1234"))
+				.param("email", email)
+				.param("password", password)
+				.param("matchingPassword", matchingPassword))
 		.andExpect(status().isOk())
 		.andExpect(view().name("user/successRegister"))
-		.andExpect(model().attribute("user", hasProperty("email", is("email"))))
-		.andExpect(model().attribute("user", hasProperty("password", is("pass"))))
-		.andExpect(model().attribute("user", hasProperty("matchingPassword", is("pass"))));
+		.andExpect(model().attribute("user", hasProperty("email", is(email))))
+		.andExpect(model().attribute("user", hasProperty("password", is(password))))
+		.andExpect(model().attribute("user", hasProperty("matchingPassword", is(matchingPassword))))
+		.andExpect(model().attributeHasNoErrors("user"));
 		
 		verify(userService, times(1)).registerNewUserCommand(any(UserCommand.class));
 		verifyNoMoreInteractions(userService);
+	}
+	
+	@Test
+	public void givenWrongEmail_whenRegisterUser_thenValidationFails() throws Exception {
+		String wrongEmail = "emailgmail.com";
+		String password = "password1234";
+		String matchingPassword = "password1234";
+		
+		mockMvc.perform(post("/user/registration")
+				.contentType(MediaType.APPLICATION_FORM_URLENCODED)
+				.param("email", wrongEmail)
+				.param("password", password)
+				.param("matchingPassword", matchingPassword))
+		.andExpect(status().isOk())
+		.andExpect(view().name("user/registration"))
+		.andExpect(model().attribute("user", hasProperty("email", is(wrongEmail))))
+		.andExpect(model().attribute("user", hasProperty("password", is(password))))
+		.andExpect(model().attribute("user", hasProperty("matchingPassword", is(matchingPassword))))
+		.andExpect(model().attributeHasFieldErrorCode("user", "email", "ValidEmail"))
+		.andExpect(model().attributeErrorCount("user", 1));
+		
+		verifyZeroInteractions(userService);
+	}
+	
+	@Test
+	public void givenExistingEmail_whenRegisterUser_thenValidationFails() throws Exception, EmailExistsException {
+		String exisitngEmail = "email@gmail.com";
+		String password = "password1234";
+		String matchingPassword = "password1234";
+		
+		when(userService.registerNewUserCommand(any(UserCommand.class))).thenThrow(EmailExistsException.class);
+		
+		mockMvc.perform(post("/user/registration")
+				.contentType(MediaType.APPLICATION_FORM_URLENCODED)
+				.param("email", exisitngEmail)
+				.param("password", password)
+				.param("matchingPassword", matchingPassword))
+		.andExpect(status().isOk())
+		.andExpect(view().name("user/registration"))
+		.andExpect(model().attribute("user", hasProperty("email", is(exisitngEmail))))
+		.andExpect(model().attribute("user", hasProperty("password", is(password))))
+		.andExpect(model().attribute("user", hasProperty("matchingPassword", is(matchingPassword))))
+		.andExpect(model().attributeHasFieldErrorCode("user", "email", "message.emailExists"))
+		.andExpect(model().attributeErrorCount("user", 1));
+		
+		verify(userService, times(1)).registerNewUserCommand(any(UserCommand.class));
+		verifyNoMoreInteractions(userService);
+	}
+	
+	@Test
+	public void givenEmptyPassword_whenRegisterUser_thenValidationFails() throws Exception, EmailExistsException {
+		String email = "email@gmail.com";
+		String password = "";
+		String matchingPassword = "";
+		
+		mockMvc.perform(post("/user/registration")
+				.contentType(MediaType.APPLICATION_FORM_URLENCODED)
+				.param("email", email)
+				.param("password", password)
+				.param("matchingPassword", matchingPassword))
+		.andExpect(status().isOk())
+		.andExpect(view().name("user/registration"))
+		.andExpect(model().attribute("user", hasProperty("email", is(email))))
+		.andExpect(model().attribute("user", hasProperty("password", is(password))))
+		.andExpect(model().attribute("user", hasProperty("matchingPassword", is(matchingPassword))))
+		.andExpect(model().attributeHasFieldErrorCode("user", "password", "NotBlank"))
+		.andExpect(model().attributeErrorCount("user", 1));
+		
+		verifyZeroInteractions(userService);
+	}
+	
+	@Test
+	public void givenNotMatchingPassword_whenRegisterUser_thenValidationFails() throws Exception, EmailExistsException {
+		String email = "email@gmail.com";
+		String password = "password1234";
+		String matchingPassword = "password";
+		
+		mockMvc.perform(post("/user/registration")
+				.contentType(MediaType.APPLICATION_FORM_URLENCODED)
+				.param("email", email)
+				.param("password", password)
+				.param("matchingPassword", matchingPassword))
+		.andExpect(status().isOk())
+		.andExpect(view().name("user/registration"))
+		.andExpect(model().attribute("user", hasProperty("email", is(email))))
+		.andExpect(model().attribute("user", hasProperty("password", is(password))))
+		.andExpect(model().attribute("user", hasProperty("matchingPassword", is(matchingPassword))))
+		.andExpect(model().attributeErrorCount("user", 1));
+		
+		verifyZeroInteractions(userService);
 	}
 }
