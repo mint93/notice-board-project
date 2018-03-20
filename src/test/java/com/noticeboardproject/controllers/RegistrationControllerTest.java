@@ -44,9 +44,10 @@ public class RegistrationControllerTest {
 		InternalResourceViewResolver viewResolver = new InternalResourceViewResolver();
         viewResolver.setPrefix("/templates");
         viewResolver.setSuffix(".html");
-		
+		        
 		registrationController = new RegistrationController(userService);
-		mockMvc = MockMvcBuilders.standaloneSetup(registrationController).setViewResolvers(viewResolver).build();
+		mockMvc = MockMvcBuilders.standaloneSetup(registrationController)
+				.setViewResolvers(viewResolver).build();
 	}
 
 	@Test
@@ -82,7 +83,8 @@ public class RegistrationControllerTest {
 		.andExpect(model().attribute("user", hasProperty("email", is(email))))
 		.andExpect(model().attribute("user", hasProperty("password", is(password))))
 		.andExpect(model().attribute("user", hasProperty("matchingPassword", is(matchingPassword))))
-		.andExpect(model().attributeHasNoErrors("user"));
+		.andExpect(model().attributeHasNoErrors("user"))
+		.andExpect(model().errorCount(0));
 		
 		verify(userService, times(1)).registerNewUserCommand(any(UserCommand.class));
 		verifyNoMoreInteractions(userService);
@@ -105,7 +107,8 @@ public class RegistrationControllerTest {
 		.andExpect(model().attribute("user", hasProperty("password", is(password))))
 		.andExpect(model().attribute("user", hasProperty("matchingPassword", is(matchingPassword))))
 		.andExpect(model().attributeHasFieldErrorCode("user", "email", "ValidEmail"))
-		.andExpect(model().attributeErrorCount("user", 1));
+		.andExpect(model().attributeErrorCount("user", 1))
+		.andExpect(model().errorCount(1));
 		
 		verifyZeroInteractions(userService);
 	}
@@ -129,7 +132,8 @@ public class RegistrationControllerTest {
 		.andExpect(model().attribute("user", hasProperty("password", is(password))))
 		.andExpect(model().attribute("user", hasProperty("matchingPassword", is(matchingPassword))))
 		.andExpect(model().attributeHasFieldErrorCode("user", "email", "message.emailExists"))
-		.andExpect(model().attributeErrorCount("user", 1));
+		.andExpect(model().attributeErrorCount("user", 1))
+		.andExpect(model().errorCount(1));
 		
 		verify(userService, times(1)).registerNewUserCommand(any(UserCommand.class));
 		verifyNoMoreInteractions(userService);
@@ -152,7 +156,8 @@ public class RegistrationControllerTest {
 		.andExpect(model().attribute("user", hasProperty("password", is(password))))
 		.andExpect(model().attribute("user", hasProperty("matchingPassword", is(matchingPassword))))
 		.andExpect(model().attributeHasFieldErrorCode("user", "password", "NotBlank"))
-		.andExpect(model().attributeErrorCount("user", 1));
+		.andExpect(model().attributeErrorCount("user", 1))
+		.andExpect(model().errorCount(1));;
 		
 		verifyZeroInteractions(userService);
 	}
@@ -173,7 +178,9 @@ public class RegistrationControllerTest {
 		.andExpect(model().attribute("user", hasProperty("email", is(email))))
 		.andExpect(model().attribute("user", hasProperty("password", is(password))))
 		.andExpect(model().attribute("user", hasProperty("matchingPassword", is(matchingPassword))))
-		.andExpect(model().attributeErrorCount("user", 1));
+		.andExpect(model().attributeHasFieldErrorCode("user", "password", "PasswordMatches"))
+		.andExpect(model().attributeErrorCount("user", 2))
+		.andExpect(model().errorCount(2));
 		
 		verifyZeroInteractions(userService);
 	}

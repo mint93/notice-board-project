@@ -10,9 +10,6 @@ import org.springframework.web.servlet.config.annotation.ViewControllerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import org.springframework.web.servlet.view.InternalResourceViewResolver;
 
-import com.noticeboardproject.validators.EmailValidator;
-import com.noticeboardproject.validators.PasswordMatchesValidator;
-
 @Configuration
 @EnableWebMvc
 public class MvcConfig implements WebMvcConfigurer{
@@ -30,7 +27,7 @@ public class MvcConfig implements WebMvcConfigurer{
         registry.addViewController("/successRegister.html");
 	}
 	
-	@Bean
+/*	@Bean
     public EmailValidator usernameValidator() {
         return new EmailValidator();
     }
@@ -38,7 +35,7 @@ public class MvcConfig implements WebMvcConfigurer{
     @Bean
     public PasswordMatchesValidator passwordMatchesValidator() {
         return new PasswordMatchesValidator();
-    }
+    }*/
 
 	@Bean
 	public MessageSource messageSource() {
