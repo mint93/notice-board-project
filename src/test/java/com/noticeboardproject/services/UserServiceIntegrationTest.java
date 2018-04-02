@@ -17,6 +17,7 @@ import com.noticeboardproject.converters.UserCommandToUser;
 import com.noticeboardproject.converters.UserToUserCommand;
 import com.noticeboardproject.exceptions.EmailExistsException;
 import com.noticeboardproject.repositories.UserRepository;
+import com.noticeboardproject.repositories.VerificationTokenRepository;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
@@ -27,6 +28,9 @@ public class UserServiceIntegrationTest {
 	
 	@Autowired
 	UserRepository userRepository;
+	
+	@Autowired
+	VerificationTokenRepository verificationTokenRepository;
 	
 	@Autowired
 	UserToUserCommand userToUserCommand;

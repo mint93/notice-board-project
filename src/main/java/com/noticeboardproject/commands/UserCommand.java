@@ -16,7 +16,7 @@ import lombok.Setter;
 public class UserCommand {
 
 	@NotNull
-	@Size(min = 1, message = "{Size.userCommand.email}")
+	@Size(min=1, message = "{Size.userCommand.email}")
 	@ValidEmail
 	private String email;
 	

@@ -22,6 +22,7 @@ import com.noticeboardproject.domain.User;
 import com.noticeboardproject.exceptions.EmailExistsException;
 import com.noticeboardproject.repositories.RoleRepository;
 import com.noticeboardproject.repositories.UserRepository;
+import com.noticeboardproject.repositories.VerificationTokenRepository;
 
 public class UserServiceImplTest {
 
@@ -38,6 +39,9 @@ public class UserServiceImplTest {
 	RoleRepository roleRepository;
 	
 	@Mock
+	VerificationTokenRepository verificationTokenRepository;
+	
+	@Mock
 	UserToUserCommand userToUserCommand;
 	
 	@Mock
@@ -47,7 +51,7 @@ public class UserServiceImplTest {
 	@Before
 	public void setUp() throws Exception {
 		MockitoAnnotations.initMocks(this);
-		userServiceImpl = new UserServiceImpl(userRepository, roleRepository, userToUserCommand, userCommandToUser);
+		userServiceImpl = new UserServiceImpl(userRepository, roleRepository, userToUserCommand, userCommandToUser, verificationTokenRepository);
 	}
 
 	@Test

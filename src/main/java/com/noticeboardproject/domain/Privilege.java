@@ -1,5 +1,6 @@
 package com.noticeboardproject.domain;
 
+import java.util.HashSet;
 import java.util.Set;
 
 import javax.persistence.Column;
@@ -27,6 +28,10 @@ public class Privilege {
 	@ManyToMany(mappedBy="privileges")
 	private Set<Role> roles;
 
+	public Privilege() {
+		roles = new HashSet<>();
+	}
+	
 	@Override
 	public int hashCode() {
 		final int prime = 31;

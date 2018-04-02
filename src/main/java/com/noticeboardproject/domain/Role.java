@@ -1,5 +1,6 @@
 package com.noticeboardproject.domain;
 
+import java.util.HashSet;
 import java.util.Set;
 
 import javax.persistence.Column;
@@ -33,6 +34,11 @@ public class Role {
 	private Set<Privilege> privileges;
 	
 	private String role;
+	
+	public Role() {
+		users = new HashSet<>();
+		privileges = new HashSet<>();
+	}
 
 	@Override
 	public int hashCode() {

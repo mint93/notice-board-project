@@ -1,5 +1,6 @@
 package com.noticeboardproject.domain;
 
+import java.util.HashSet;
 import java.util.Set;
 
 import javax.persistence.Column;
@@ -29,10 +30,17 @@ public class User {
 	
 	private String password;
 	
+	private boolean enabled;
+	
 	@ManyToMany(fetch=FetchType.EAGER)
 	@JoinTable(name = "user_role", joinColumns = @JoinColumn(name = "user_id", referencedColumnName="id"), inverseJoinColumns = @JoinColumn(name = "role_id", referencedColumnName="id"))
 	private Set<Role> roles;
 
+	public User() {
+		roles = new HashSet<>();
+		this.enabled=false;
+	}
+	
 	@Override
 	public int hashCode() {
 		final int prime = 31;
