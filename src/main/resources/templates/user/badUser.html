@@ -2,8 +2,18 @@
 <html xmlns="http://www.w3.org/1999/xhtml"
 	xmlns:th="http://www.thymeleaf.org">
 
+<head>
+	<meta charset="utf-8">
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"></link>
+  	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+  	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+</head>
 <body>
-    <h1 th:text="${param.message[0]}">Error Message</h1>
-    <a th:href="@{/registration.html}">signup</a>
+	<div class="container">
+		<div class="col-md-6 col-md-offset-3">
+		    <h1 class="alert alert-danger" th:text="${param.message[0]}">Error Message</h1>
+		    <a th:href="@{/user/registration.html}" th:text="#{badUser.link.register}">Registration</a>
+    	</div>
+	</div>
 </body>
 </html>
