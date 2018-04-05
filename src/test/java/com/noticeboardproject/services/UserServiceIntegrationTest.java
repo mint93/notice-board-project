@@ -13,6 +13,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import com.noticeboardproject.commands.UserCommand;
@@ -42,6 +43,9 @@ public class UserServiceIntegrationTest {
 	
 	@Autowired
 	UserCommandToUser userCommandToUser;
+	
+	@Autowired
+	PasswordEncoder passwordEncoder;
 
 	private final String EMAIL = "email";
 	private final String PASSWORD = "password";
@@ -70,9 +74,8 @@ public class UserServiceIntegrationTest {
 		
 		//then
 		assertEquals(EMAIL, registeredUserCommand.getEmail());
-		assertEquals(PASSWORD, registeredUserCommand.getPassword());
-		assertEquals(PASSWORD, registeredUserCommand.getMatchingPassword());
-		
+		assertEquals(userRepository.findByEmail(registeredUserCommand.getEmail()).getPassword(), registeredUserCommand.getPassword());
+		assertEquals(userRepository.findByEmail(registeredUserCommand.getEmail()).getPassword(), registeredUserCommand.getMatchingPassword());
 	}
 	
 	@Transactional

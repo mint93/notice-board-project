@@ -5,6 +5,9 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.fail;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.when;
 
 import java.util.HashSet;
@@ -13,6 +16,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 import com.noticeboardproject.commands.UserCommand;
 import com.noticeboardproject.converters.UserCommandToUser;
@@ -27,6 +31,8 @@ import com.noticeboardproject.repositories.VerificationTokenRepository;
 public class UserServiceImplTest {
 
 	private final String PASS = "pass";
+	
+	private final String ENCODEDPASS = "encodedPass";
 
 	private final String EMAIL = "email";
 
@@ -46,12 +52,15 @@ public class UserServiceImplTest {
 	
 	@Mock
 	UserCommandToUser userCommandToUser;
+	
+	@Mock
+	PasswordEncoder passwordEncoder;
 
 	
 	@Before
 	public void setUp() throws Exception {
 		MockitoAnnotations.initMocks(this);
-		userServiceImpl = new UserServiceImpl(userRepository, roleRepository, userToUserCommand, userCommandToUser, verificationTokenRepository);
+		userServiceImpl = new UserServiceImpl(userRepository, roleRepository, userToUserCommand, userCommandToUser, verificationTokenRepository, passwordEncoder);
 	}
 
 	@Test
@@ -63,7 +72,7 @@ public class UserServiceImplTest {
 		
 		User savedUser = new User();
 		savedUser.setEmail(EMAIL);
-		savedUser.setPassword(PASS);
+		savedUser.setPassword(ENCODEDPASS);
 		
 		User convertedUser = new User();
 		convertedUser.setEmail(EMAIL);
@@ -71,8 +80,8 @@ public class UserServiceImplTest {
 		
 		UserCommand convertedUserCommand = new UserCommand();
 		convertedUserCommand.setEmail(EMAIL);
-		convertedUserCommand.setPassword(PASS);
-		convertedUserCommand.setMatchingPassword(PASS);
+		convertedUserCommand.setPassword(ENCODEDPASS);
+		convertedUserCommand.setMatchingPassword(ENCODEDPASS);
 		
 		Role userRole = new Role();
 		userRole.setUsers(new HashSet<User>());
@@ -84,6 +93,7 @@ public class UserServiceImplTest {
 		when(userCommandToUser.convert(any(UserCommand.class))).thenReturn(convertedUser);
 		when(userRepository.save(any(User.class))).thenReturn(savedUser);
 		when(userToUserCommand.convert(any(User.class))).thenReturn(convertedUserCommand);
+		when(passwordEncoder.encode(any())).thenReturn(ENCODEDPASS);
 		
 		UserCommand returendUserCommand=null;
 		try {
@@ -94,7 +104,18 @@ public class UserServiceImplTest {
 		}
 		
 		assertNotNull(returendUserCommand);
-		assertArrayEquals(new String[] {EMAIL, PASS, PASS}, new String[] {returendUserCommand.getEmail(), returendUserCommand.getPassword(), returendUserCommand.getMatchingPassword()});
+		assertArrayEquals(new String[] {EMAIL, ENCODEDPASS, ENCODEDPASS}, new String[] {returendUserCommand.getEmail(), returendUserCommand.getPassword(), returendUserCommand.getMatchingPassword()});
+		verify(userRepository, times(1)).findByEmail(anyString());
+		verify(userRepository, times(1)).save(any());
+		verifyNoMoreInteractions(userRepository);
+		verify(roleRepository, times(1)).findByRole(anyString());
+		verifyNoMoreInteractions(roleRepository);
+		verify(userCommandToUser, times(1)).convert(any());
+		verifyNoMoreInteractions(userCommandToUser);
+		verify(userToUserCommand, times(1)).convert(any());
+		verifyNoMoreInteractions(userToUserCommand);
+		verify(passwordEncoder, times(1)).encode(any());
+		verifyNoMoreInteractions(passwordEncoder);
 	}
 
 	@Test(expected=EmailExistsException.class)

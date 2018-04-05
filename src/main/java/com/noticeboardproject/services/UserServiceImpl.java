@@ -5,6 +5,7 @@ import java.util.UUID;
 import javax.transaction.Transactional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.noticeboardproject.commands.UserCommand;
@@ -31,15 +32,18 @@ public class UserServiceImpl implements UserService {
 	private UserToUserCommand userToUserCommand;
 	
 	private UserCommandToUser userCommandToUser;
-
+	
+	private PasswordEncoder passwordEncoder;
+	
 	@Autowired
 	public UserServiceImpl(UserRepository userRepository, RoleRepository roleRepository,
-			UserToUserCommand userToUserCommand, UserCommandToUser userCommandToUser, VerificationTokenRepository verificationTokenRepository) {
+			UserToUserCommand userToUserCommand, UserCommandToUser userCommandToUser, VerificationTokenRepository verificationTokenRepository, PasswordEncoder passwordEncoder) {
 		this.userRepository = userRepository;
 		this.roleRepository = roleRepository;
 		this.userToUserCommand = userToUserCommand;
 		this.userCommandToUser = userCommandToUser;
 		this.verificationTokenRepository = verificationTokenRepository;
+		this.passwordEncoder = passwordEncoder;
 	}
 
 	@Override
@@ -49,6 +53,7 @@ public class UserServiceImpl implements UserService {
                     +  userCommand.getEmail());
         }
         final User user = userCommandToUser.convert(userCommand);
+        user.setPassword(passwordEncoder.encode(userCommand.getPassword()));
         Role roleUser = roleRepository.findByRole("ROLE_USER");
         roleUser.getUsers().add(user);
         user.getRoles().add(roleUser);
@@ -65,7 +70,7 @@ public class UserServiceImpl implements UserService {
         User user = verificationTokenRepository.findByToken(verificationToken).getUser();
         return user;
     }
-     
+    
     @Override
     public VerificationToken getVerificationToken(String VerificationToken) {
         return verificationTokenRepository.findByToken(VerificationToken);
