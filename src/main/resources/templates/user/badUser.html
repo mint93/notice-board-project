@@ -13,6 +13,10 @@
 		<div class="col-md-6 col-md-offset-3">
 		    <h1 class="alert alert-danger" th:text="${param.message[0]}">Error Message</h1>
 		    <a th:href="@{/user/registration.html}" th:text="#{badUser.link.register}">Registration</a>
+		    <div th:if="${param.expired[0]}">
+				<p th:text="#{badUser.label.resendRegistrationToken}">Resend</p>
+				<a href="#" th:href="@{/user/resendRegistrationToken(token=${param.token[0]})}" th:text="#{badUser.button.resendToken}" class="btn btn-success"> <i class="icon-hand-right"></i>Resend</a>
+		  	</div>
     	</div>
 	</div>
 </body>

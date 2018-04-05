@@ -27,6 +27,8 @@ import org.mockito.MockitoAnnotations;
 import org.springframework.context.MessageSource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
+import org.springframework.mail.MailSender;
+import org.springframework.mail.SimpleMailMessage;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.servlet.view.InternalResourceViewResolver;
@@ -48,6 +50,9 @@ public class RegistrationControllerTest {
 	
 	@Mock
 	MessageSource messages;
+	
+	@Mock
+	MailSender mailSender;
 	
 	@Before
 	public void setUp() throws Exception {
@@ -99,6 +104,7 @@ public class RegistrationControllerTest {
 		.andExpect(model().attribute("user", hasProperty("email", is(email))))
 		.andExpect(model().attribute("user", hasProperty("password", is(password))))
 		.andExpect(model().attribute("user", hasProperty("matchingPassword", is(matchingPassword))))
+		.andExpect(model().attribute("message", is("userRegistered")))
 		.andExpect(model().attributeHasNoErrors("user"))
 		.andExpect(model().errorCount(0));
 		
@@ -238,6 +244,8 @@ public class RegistrationControllerTest {
 		.andExpect(status().is3xxRedirection())
 		.andExpect(view().name("redirect:badUser"))
 		.andExpect(model().attribute("message", is("auth.message.expired")))
+		.andExpect(model().attribute("expired", is(true)))
+		.andExpect(model().attribute("token", is(verificationToken.getToken())))
 		.andExpect(model().hasNoErrors());
 		
 		assertEquals(false, user.isEnabled());
@@ -258,8 +266,8 @@ public class RegistrationControllerTest {
 		mockMvc.perform(get("/user/registrationConfirm")
 				.contentType(MediaType.APPLICATION_FORM_URLENCODED)
 				.param("token", "sometoken"))
-		.andExpect(status().is3xxRedirection())
-		.andExpect(view().name("redirect:login"))
+		.andExpect(status().isOk())
+		.andExpect(view().name("user/successRegister"))
 		.andExpect(model().hasNoErrors());
 		
 		assertEquals(true, user.isEnabled());
@@ -268,4 +276,25 @@ public class RegistrationControllerTest {
 		verifyNoMoreInteractions(userService);
 	}
 
+	@Ignore
+	@Test
+	public void resendRegistrationTokenTest() throws Exception {
+		
+		when(userService.generateNewVerificationToken(any(String.class))).thenReturn(new VerificationToken());
+		when(userService.getUser(any(String.class))).thenReturn(new User());
+		doNothing().when(mailSender).send(any(SimpleMailMessage.class));
+		
+		mockMvc.perform(get("/user/resendRegistrationToken")
+				.contentType(MediaType.APPLICATION_FORM_URLENCODED)
+				.param("token", "token1234"))
+		.andExpect(status().isOk())
+		.andExpect(view().name("user/successRegister"))
+		.andExpect(model().attribute("message", is("resendRegistrationToken")));
+		
+		verify(userService, times(1)).generateNewVerificationToken(any());
+		verify(userService, times(1)).getUser(any());
+		verifyNoMoreInteractions(userService);
+		verify(mailSender, times(1)).send(any(SimpleMailMessage.class));
+		verifyNoMoreInteractions(mailSender);
+	}
 }

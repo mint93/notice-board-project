@@ -1,6 +1,9 @@
 package com.noticeboardproject.controllers;
 
 import java.util.Calendar;
+import java.util.HashMap;
+import java.util.Locale;
+import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
@@ -8,6 +11,8 @@ import javax.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.MessageSource;
+import org.springframework.mail.SimpleMailMessage;
+import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -36,6 +41,9 @@ public class RegistrationController {
 	
 	@Autowired
 	ApplicationEventPublisher eventPublisher;
+	
+	@Autowired
+	JavaMailSender mailSender;
 	
 	@Autowired
 	public RegistrationController(UserService userService) {
@@ -83,7 +91,10 @@ public class RegistrationController {
 				e.printStackTrace();
 				return new ModelAndView("emailError", "user", userCommand);
 			}
-	        return new ModelAndView("user/successRegister", "user", registeredUserCommand);
+	    	Map<String, Object> model = new HashMap<>();
+	    	model.put("user", registeredUserCommand);
+	    	model.put("message", "userRegistered");
+	        return new ModelAndView("user/successRegister", model);
 	    }
 	}
 	
@@ -96,7 +107,9 @@ public class RegistrationController {
 	    if (verificationToken == null) {
 	    	//String message = messages.getMessage("auth.message.invalidToken", null, request.getLocale());
 	    	String message = "auth.message.invalidToken";
-	    	return new ModelAndView("redirect:badUser", "message", message);	    	
+	    	model.addAttribute("message", message);
+	    	model.addAttribute("expired", false);
+	    	return new ModelAndView("redirect:badUser");	    	
 	    }
 	    
 	    User user = verificationToken.getUser();
@@ -104,12 +117,16 @@ public class RegistrationController {
 	    if ((verificationToken.getExpiryDate().getTime() - cal.getTime().getTime()) <= 0) {
 	    	//String message = messages.getMessage("auth.message.expired", null, request.getLocale());
 	    	String message = "auth.message.expired";
-	    	return new ModelAndView("redirect:badUser", "message", message);
+	    	model.addAttribute("message", message);
+	        model.addAttribute("expired", true);
+	        model.addAttribute("token", verificationToken.getToken());
+	    	return new ModelAndView("redirect:badUser");
 	    }
 	    
 	    user.setEnabled(true);
 	    userService.saveRegisteredUser(user);
-    	return new ModelAndView("redirect:login");	    
+	    
+	    return new ModelAndView("user/successRegister", "message", "userConfirmed");
 	}
 	
 	@GetMapping("/user/badUser")
@@ -120,6 +137,31 @@ public class RegistrationController {
 	@GetMapping("/user/login")
 	public String loginPage(Model model) {
 		return "user/login";
+	}
+	
+	@GetMapping("/user/resendRegistrationToken")
+    public ModelAndView resendRegistrationToken(final HttpServletRequest request, @RequestParam("token") final String existingToken) {
+        final VerificationToken newToken = userService.generateNewVerificationToken(existingToken);
+        final User user = userService.getUser(newToken.getToken());
+        mailSender.send(constructResendVerificationTokenEmail(getAppUrl(request), request.getLocale(), newToken, user));
+        return new ModelAndView("user/successRegister", "message", "resendRegistrationToken");
+	}
+
+	
+	
+	
+	private String getAppUrl(HttpServletRequest request) {
+        return "http://" + request.getServerName() + ":" + request.getServerPort() + request.getContextPath();
+	}
+	
+	private SimpleMailMessage constructResendVerificationTokenEmail(final String contextPath, final Locale locale, final VerificationToken newToken, final User user) {
+        final String confirmationUrl = contextPath + "/user/registrationConfirm?token=" + newToken.getToken();
+        final String message = messages.getMessage("message.resendToken", null, locale);
+        final SimpleMailMessage email = new SimpleMailMessage();
+        email.setSubject(messages.getMessage("message.subject.resendToken", null, locale));
+        email.setText(message + confirmationUrl);
+        email.setTo(user.getEmail());
+        return email;
 	}
 	
 }

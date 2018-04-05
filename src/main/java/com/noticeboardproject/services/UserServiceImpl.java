@@ -1,5 +1,7 @@
 package com.noticeboardproject.services;
 
+import java.util.UUID;
+
 import javax.transaction.Transactional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -78,5 +80,13 @@ public class UserServiceImpl implements UserService {
     public void createVerificationToken(UserCommand userCommand, String token) {
         VerificationToken verificationToken = new VerificationToken(token, userRepository.findByEmail(userCommand.getEmail()));
         verificationTokenRepository.save(verificationToken);
+    }
+    
+    @Override
+    public VerificationToken generateNewVerificationToken(final String existingVerificationToken) {
+        VerificationToken token = verificationTokenRepository.findByToken(existingVerificationToken);
+        token.updateToken(UUID.randomUUID().toString());
+        token = verificationTokenRepository.save(token);
+        return token;
     }
 }

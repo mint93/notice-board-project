@@ -10,9 +10,23 @@
 </head>
 <body>
 	<div class="container">
-		<div class="col-md-6 col-md-offset-3">
-		    <h1 class="alert alert-success">User registered</h1>
-		    <p th:text ="#{successRegister.label.confirmEmail} + ${user.getEmail()}"></p>
+		<div class="col-md-6 col-md-offset-3" th:switch="${message}">
+			<div th:case="resendRegistrationToken">
+			    <h1 class="alert alert-success" th:text="#{successRegister.label.tokenResend}">Token send</h1>
+		    </div>
+		    
+		    <div th:case="userConfirmed">
+			    <h1 class="alert alert-success" th:text="#{successRegister.label.userConfirmed}">Email confirmed</h1>
+			    <p  th:text ="#{successRegister.label.userConfirmedMessage}">Email confirmed, log in</p>
+		    </div>
+		    
+		    <div th:case="userRegistered">
+			    <h1 class="alert alert-success" th:text="#{successRegister.label.userRegistered}">User registered</h1>
+			    <p  th:text ="#{successRegister.label.confirmEmail} + ${user.getEmail()}">Confirm your email</p>
+		    </div>
+		    
+		    <h1 th:case="*" th:text="#{successRegister.label.invalidRequest}" class="alert alert-danger">Invalid request</h1>
+		    
 		    <a href="#" th:href="@{/user/login}" th:text="#{sucessRegister.link.login}">Login</a>
     	</div>
 	</div>

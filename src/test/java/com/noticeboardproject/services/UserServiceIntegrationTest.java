@@ -1,7 +1,10 @@
 package com.noticeboardproject.services;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.fail;
+
+import java.util.Date;
 
 import javax.transaction.Transactional;
 
@@ -15,6 +18,8 @@ import org.springframework.test.context.junit4.SpringRunner;
 import com.noticeboardproject.commands.UserCommand;
 import com.noticeboardproject.converters.UserCommandToUser;
 import com.noticeboardproject.converters.UserToUserCommand;
+import com.noticeboardproject.domain.User;
+import com.noticeboardproject.domain.VerificationToken;
 import com.noticeboardproject.exceptions.EmailExistsException;
 import com.noticeboardproject.repositories.UserRepository;
 import com.noticeboardproject.repositories.VerificationTokenRepository;
@@ -85,4 +90,22 @@ public class UserServiceIntegrationTest {
 		userService.registerNewUserCommand(userCommand);
 	}
 
+	@Transactional
+	@Test()
+	public void generateNewVerificationTokenTest() throws EmailExistsException {
+		final String TOKEN = "1234";
+		
+		User user = new User();
+		userRepository.save(user);
+		
+		VerificationToken verificationToken = new VerificationToken(TOKEN, user);
+		verificationToken.setExpiryDate(new Date(1L));
+		verificationToken.setUser(user);
+		verificationTokenRepository.save(verificationToken);
+		
+		VerificationToken newToken = userService.generateNewVerificationToken(verificationToken.getToken());
+		
+		assertNotEquals(TOKEN, newToken.getToken());
+	}
+	
 }

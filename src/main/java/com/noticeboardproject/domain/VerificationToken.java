@@ -50,6 +50,11 @@ public class VerificationToken {
 		calendar.add(Calendar.MINUTE, expiryTimeInMinutes);
 		return new Date(calendar.getTime().getTime());
 	}
+	
+	public void updateToken(final String token) {
+        this.token = token;
+        this.expiryDate = calculateExpiryDate(EXPIRATION);
+	}
 
 	@Override
 	public int hashCode() {
