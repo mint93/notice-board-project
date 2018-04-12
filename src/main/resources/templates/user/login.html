@@ -34,7 +34,7 @@
             <div class="panel panel-info" >
 	            <div class="panel-heading">
 	                <div class="panel-title" th:text="#{login.label.title}">Login</div>
-	                <div id="forgotpasslink"><a href="#" th:text="#{login.link.forgotPass}">Forgot password?</a></div>
+	                <div id="forgotpasslink"><a href="#" th:href="@{/user/resetPassword}" th:text="#{login.link.forgotPass}">Forgot password?</a></div>
 	            </div>
 
                 <div class="panel-body">

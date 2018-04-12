@@ -1,7 +1,9 @@
 package com.noticeboardproject.services;
 
+import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotEquals;
+import static org.junit.Assert.assertThat;
 import static org.junit.Assert.fail;
 
 import java.util.Date;
@@ -109,6 +111,16 @@ public class UserServiceIntegrationTest {
 		VerificationToken newToken = userService.generateNewVerificationToken(verificationToken.getToken());
 		
 		assertNotEquals(TOKEN, newToken.getToken());
+	}
+	
+	@Transactional
+	@Test
+	public void findUserByEmailTest() {
+		User user = new User();
+		user.setEmail("email");
+		userRepository.save(user);
+		
+		assertThat(user, is(userService.findUserByEmail(user.getEmail())));
 	}
 	
 }

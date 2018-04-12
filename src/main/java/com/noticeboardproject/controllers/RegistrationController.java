@@ -4,6 +4,7 @@ import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
+import java.util.UUID;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
@@ -13,6 +14,7 @@ import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.MessageSource;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -23,12 +25,15 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+import org.springframework.web.servlet.view.RedirectView;
 
 import com.noticeboardproject.commands.UserCommand;
 import com.noticeboardproject.domain.User;
 import com.noticeboardproject.domain.VerificationToken;
 import com.noticeboardproject.events.OnRegistrationCompleteEvent;
 import com.noticeboardproject.exceptions.EmailExistsException;
+import com.noticeboardproject.services.SecurityUserService;
 import com.noticeboardproject.services.UserService;
 
 @Controller
@@ -44,6 +49,9 @@ public class RegistrationController {
 	
 	@Autowired
 	JavaMailSender mailSender;
+	
+	@Autowired
+	SecurityUserService securityUserService;
 	
 	@Autowired
 	public RegistrationController(UserService userService) {
@@ -66,16 +74,14 @@ public class RegistrationController {
 		//in order to display error message in thymleaf I add this error to 'password' field
 		//now in 'errors' the same error is duplicated for object 'user' and for field 'password' in object 'user', but I can now display error massage
 		if (errors.getAllErrors().stream().anyMatch(error -> error.getCode().equals("PasswordMatches"))) {
-			//result.rejectValue("password", "PasswordMatches", messages.getMessage("message.passwordsNotMatch", null, request.getLocale()));
-			result.rejectValue("password", "PasswordMatches", "message.passwordsNotMatch");
+			result.rejectValue("password", "PasswordMatches", messages.getMessage("message.passwordsNotMatch", null, request.getLocale()));
 		}
 		
 		if (!result.hasErrors()) {
 			try {
 		        registeredUserCommand = userService.registerNewUserCommand(userCommand);
 		    } catch (EmailExistsException e) {
-		    	//result.rejectValue("email", messages.getMessage("message.emailExists", null, request.getLocale()));
-		    	result.rejectValue("email", "message.emailExists");
+		    	result.rejectValue("email", messages.getMessage("message.emailExists", null, request.getLocale()));
 		    }
 		}
 		
@@ -105,18 +111,16 @@ public class RegistrationController {
 	    VerificationToken verificationToken = userService.getVerificationToken(token);
 	    
 	    if (verificationToken == null) {
-	    	//String message = messages.getMessage("auth.message.invalidToken", null, request.getLocale());
-	    	String message = "auth.message.invalidToken";
+	    	String message = messages.getMessage("auth.message.invalidToken", null, request.getLocale());
 	    	model.addAttribute("message", message);
 	    	model.addAttribute("expired", false);
-	    	return new ModelAndView("redirect:badUser");	    	
+	    	return new ModelAndView("redirect:badUser");
 	    }
 	    
 	    User user = verificationToken.getUser();
 	    Calendar cal = Calendar.getInstance();
 	    if ((verificationToken.getExpiryDate().getTime() - cal.getTime().getTime()) <= 0) {
-	    	//String message = messages.getMessage("auth.message.expired", null, request.getLocale());
-	    	String message = "auth.message.expired";
+	    	String message = messages.getMessage("auth.message.expired", null, request.getLocale());
 	    	model.addAttribute("message", message);
 	        model.addAttribute("expired", true);
 	        model.addAttribute("token", verificationToken.getToken());
@@ -134,9 +138,19 @@ public class RegistrationController {
 		return "user/badUser";
 	}
 	
+	@GetMapping("/user/badToken")
+	public String badToken(Model model) {
+		return "user/badToken";
+	}
+	
 	@GetMapping("/user/login")
 	public String loginPage(Model model) {
 		return "user/login";
+	}
+	
+	@GetMapping("/user/updatePassword")
+	public String updatePasswordPage(Model model) {
+		return "user/updatePassword";
 	}
 	
 	@GetMapping("/user/resendRegistrationToken")
@@ -146,7 +160,71 @@ public class RegistrationController {
         mailSender.send(constructResendVerificationTokenEmail(getAppUrl(request), request.getLocale(), newToken, user));
         return new ModelAndView("user/successRegister", "message", "resendRegistrationToken");
 	}
+	
+	@GetMapping("/user/resetPassword")
+	public String resetPasswordForm(Model model) {
+		UserCommand userCommand = new UserCommand();
+		userCommand.setPassword("a");
+		userCommand.setMatchingPassword("a");
+		model.addAttribute("user", userCommand);
+		return "user/forgotPassword";
+	}
 
+	@PostMapping("/user/resetPassword")
+    public ModelAndView resetPassword(final HttpServletRequest request, @ModelAttribute("user") @Valid UserCommand userCommand, BindingResult result, Errors errors, Model model) {
+		User user = null;
+		if (!result.hasErrors()) {
+			user = userService.findUserByEmail(userCommand.getEmail());
+			if (user==null) {
+				result.rejectValue("email", "message.emailDontExists");
+			}
+		}
+		
+	    if (result.hasErrors()) {
+			return new ModelAndView("user/forgotPassword", "user", userCommand);
+		}
+	    else {
+	    	final String token = UUID.randomUUID().toString();
+            userService.createPasswordResetTokenForUser(user, token);
+            mailSender.send(constructResetTokenEmail(getAppUrl(request), request.getLocale(), token, user));
+            model.addAttribute("message", "resetPassword");
+            model.addAttribute("user", user);
+            return new ModelAndView("user/successRegister");
+	    }
+		
+	}
+	
+	@GetMapping("/user/changePassword")
+    public RedirectView showChangePasswordPage(final Locale locale, final Model model, @RequestParam("id") final long id, @RequestParam("token") final String token, HttpServletRequest request, RedirectAttributes redirectAttributes) {
+        final String result = securityUserService.validatePasswordResetToken(id, token);
+        if (result != null) {
+        	redirectAttributes.addFlashAttribute("message", messages.getMessage("auth.message." + result, null, request.getLocale()));
+            return new RedirectView("badToken");
+        }
+        UserCommand userCommand = new UserCommand();
+        userCommand.setEmail(securityUserService.getPasswordResetTokenByToken(token).getUser().getEmail());
+        redirectAttributes.addFlashAttribute("user", userCommand);
+        return new RedirectView("updatePassword");
+	}
+	
+	@PostMapping("/user/savePassword")
+	public ModelAndView savePassword(Locale locale, @ModelAttribute("user") @Valid UserCommand userCommand, BindingResult result, Errors errors, Model model, HttpServletRequest request) {
+		User user = null;
+		if (errors.getAllErrors().stream().anyMatch(error -> error.getCode().equals("PasswordMatches"))) {
+			result.rejectValue("password", "PasswordMatches", messages.getMessage("message.passwordsNotMatch", null, request.getLocale()));
+		}
+		if (!result.hasErrors()) {
+			user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+			userService.changeUserPassword(user, userCommand.getPassword());
+			
+			model.addAttribute("message", "passwordUpdated");
+		    return new ModelAndView("user/successRegister");
+		}else {
+			return new ModelAndView("user/updatePassword", "user", userCommand);
+		}
+	}
+	
+	
 	
 	
 	
@@ -157,11 +235,21 @@ public class RegistrationController {
 	private SimpleMailMessage constructResendVerificationTokenEmail(final String contextPath, final Locale locale, final VerificationToken newToken, final User user) {
         final String confirmationUrl = contextPath + "/user/registrationConfirm?token=" + newToken.getToken();
         final String message = messages.getMessage("message.resendToken", null, locale);
-        final SimpleMailMessage email = new SimpleMailMessage();
-        email.setSubject(messages.getMessage("message.subject.resendToken", null, locale));
-        email.setText(message + confirmationUrl);
-        email.setTo(user.getEmail());
-        return email;
+        return constructEmail(messages.getMessage("message.subject.resendToken", null, locale), message + confirmationUrl, user);
+	}
+	
+	private SimpleMailMessage constructResetTokenEmail(String contextPath, Locale locale, String token, User user) {
+		String url = contextPath + "/user/changePassword?id=" + user.getId() + "&token=" + token;
+		String message = messages.getMessage("message.resetPassword", null, locale);
+		return constructEmail("Reset Password", message + url, user);
+	}
+			 
+	private SimpleMailMessage constructEmail(String subject, String body, User user) {
+	    SimpleMailMessage email = new SimpleMailMessage();
+	    email.setSubject(subject);
+	    email.setText(body);
+	    email.setTo(user.getEmail());
+	    return email;
 	}
 	
 }

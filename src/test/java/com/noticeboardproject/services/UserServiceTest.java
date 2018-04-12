@@ -28,7 +28,7 @@ import com.noticeboardproject.repositories.RoleRepository;
 import com.noticeboardproject.repositories.UserRepository;
 import com.noticeboardproject.repositories.VerificationTokenRepository;
 
-public class UserServiceImplTest {
+public class UserServiceTest {
 
 	private final String PASS = "pass";
 	
@@ -132,6 +132,5 @@ public class UserServiceImplTest {
 		when(userRepository.findByEmail(anyString())).thenReturn(existingUser);
 		
 		userServiceImpl.registerNewUserCommand(userCommand);
-		
 	}
 }

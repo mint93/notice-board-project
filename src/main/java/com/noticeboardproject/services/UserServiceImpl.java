@@ -11,10 +11,12 @@ import org.springframework.stereotype.Service;
 import com.noticeboardproject.commands.UserCommand;
 import com.noticeboardproject.converters.UserCommandToUser;
 import com.noticeboardproject.converters.UserToUserCommand;
+import com.noticeboardproject.domain.PasswordResetToken;
 import com.noticeboardproject.domain.Role;
 import com.noticeboardproject.domain.User;
 import com.noticeboardproject.domain.VerificationToken;
 import com.noticeboardproject.exceptions.EmailExistsException;
+import com.noticeboardproject.repositories.PasswordResetTokenRepository;
 import com.noticeboardproject.repositories.RoleRepository;
 import com.noticeboardproject.repositories.UserRepository;
 import com.noticeboardproject.repositories.VerificationTokenRepository;
@@ -34,6 +36,9 @@ public class UserServiceImpl implements UserService {
 	private UserCommandToUser userCommandToUser;
 	
 	private PasswordEncoder passwordEncoder;
+	
+	@Autowired
+	private PasswordResetTokenRepository passwordResetTokenRepository;
 	
 	@Autowired
 	public UserServiceImpl(UserRepository userRepository, RoleRepository roleRepository,
@@ -66,6 +71,11 @@ public class UserServiceImpl implements UserService {
 	}
 	
 	@Override
+    public User findUserByEmail(final String email) {
+        return userRepository.findByEmail(email);
+	}
+	
+	@Override
     public User getUser(String verificationToken) {
         User user = verificationTokenRepository.findByToken(verificationToken).getUser();
         return user;
@@ -93,5 +103,17 @@ public class UserServiceImpl implements UserService {
         token.updateToken(UUID.randomUUID().toString());
         token = verificationTokenRepository.save(token);
         return token;
+    }
+    
+    @Override
+    public void createPasswordResetTokenForUser(final User user, final String token) {
+        final PasswordResetToken myToken = new PasswordResetToken(token, user);
+        passwordResetTokenRepository.save(myToken);
+    }
+    
+    @Override
+    public void changeUserPassword(User user, String password) {
+        user.setPassword(passwordEncoder.encode(password));
+        userRepository.save(user);
     }
 }

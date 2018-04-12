@@ -24,7 +24,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 		http
 			.csrf().disable()
 			.authorizeRequests()
-				.antMatchers("/h2-console/**", "/user/registration", "/user/successRegister").permitAll();
+				.antMatchers("/h2-console/**", "/user/registration", "/user/successRegister", "/user/badToken", "/user/badUser", "/user/emailError", "/user/forgotPassword", "/user/login").permitAll()
+				.antMatchers("/user/updatePassword*", "/user/savePassword*").hasAuthority("CHANGE_PASSWORD_PRIVILEGE");
 		//prevent blank page after logging into the H2 console
 		http.headers().frameOptions().disable();
 	}
