@@ -2,7 +2,7 @@
 
 [![CircleCI](https://circleci.com/gh/mint93/notice-board-project.svg?style=svg)](https://circleci.com/gh/mint93/notice-board-project)
 
-[![Coverage Status](https://coveralls.io/repos/github/mint93/notice-board-project/badge.svg)](https://coveralls.io/github/mint93/notice-board-project)
+[![Coverage Status](https://coveralls.io/repos/github/mint93/notice-board-project/badge.svg?branch=master)](https://coveralls.io/github/mint93/notice-board-project?branch=master)
 
 An application that allows you to view and add offers to buy / sell items, created only for fun and training purposes.
 
