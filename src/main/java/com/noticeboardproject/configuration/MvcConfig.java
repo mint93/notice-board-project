@@ -18,7 +18,7 @@ import org.springframework.web.servlet.view.InternalResourceViewResolver;
 
 @Configuration
 @EnableWebMvc
-public class MvcConfig implements WebMvcConfigurer{
+public class MvcConfig implements WebMvcConfigurer {
 	@Bean
     public ViewResolver getViewResolver(){
         InternalResourceViewResolver resolver = new InternalResourceViewResolver();
@@ -27,28 +27,16 @@ public class MvcConfig implements WebMvcConfigurer{
         return resolver;
     }
 	
+	
 	@Override
 	public void addViewControllers(ViewControllerRegistry registry) {
-        registry.addViewController("/registration.html");
-        registry.addViewController("/successRegister.html");
-        registry.addViewController("/badUser.html");
-        registry.addViewController("/badToken.html");
-        registry.addViewController("/emailError.html");
-        registry.addViewController("/login.html");
-        registry.addViewController("/forgotPassword.html");
-        registry.addViewController("/updatePassword.html");
+        registry.addViewController("/user/badUser");
+        registry.addViewController("/user/badToken");
+        registry.addViewController("/login");
+        registry.addViewController("/user/updatePassword");
+        registry.addViewController("/").setViewName("index");
 	}
-	
-/*	@Bean
-    public EmailValidator usernameValidator() {
-        return new EmailValidator();
-    }
-
-    @Bean
-    public PasswordMatchesValidator passwordMatchesValidator() {
-        return new PasswordMatchesValidator();
-    }*/
-
+		
 	@Bean
 	public MessageSource messageSource() {
 		final ReloadableResourceBundleMessageSource messageSource = new ReloadableResourceBundleMessageSource();

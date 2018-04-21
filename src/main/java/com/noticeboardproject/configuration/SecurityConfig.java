@@ -24,8 +24,22 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 		http
 			.csrf().disable()
 			.authorizeRequests()
-				.antMatchers("/h2-console/**", "/user/registration", "/user/successRegister", "/user/badToken", "/user/badUser", "/user/emailError", "/user/forgotPassword", "/user/login").permitAll()
-				.antMatchers("/user/updatePassword*", "/user/savePassword*").hasAuthority("CHANGE_PASSWORD_PRIVILEGE");
+				.antMatchers("/h2-console/**", "/user/registration", "/user/successRegister", "/user/badToken", "/user/badUser", "/user/emailError", "/user/forgotPassword", "/login", "/resources/**")
+				.permitAll()
+				.antMatchers("/user/updatePassword*", "/user/savePassword*")
+				.hasAuthority("CHANGE_PASSWORD_PRIVILEGE")
+			.and()
+			.formLogin()
+				.loginPage("/login")
+				.loginProcessingUrl("/login")
+				.defaultSuccessUrl("/")
+				.failureUrl("/login?error=true")
+				.permitAll()
+			.and()
+			.logout()
+				.logoutSuccessUrl("/?logoutSucc=true")
+				.deleteCookies("JSESSIONID")
+				.permitAll();
 		//prevent blank page after logging into the H2 console
 		http.headers().frameOptions().disable();
 	}

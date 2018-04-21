@@ -133,26 +133,6 @@ public class RegistrationController {
 	    return new ModelAndView("user/successRegister", "message", "userConfirmed");
 	}
 	
-	@GetMapping("/user/badUser")
-	public String badUser(Model model) {
-		return "user/badUser";
-	}
-	
-	@GetMapping("/user/badToken")
-	public String badToken(Model model) {
-		return "user/badToken";
-	}
-	
-	@GetMapping("/user/login")
-	public String loginPage(Model model) {
-		return "user/login";
-	}
-	
-	@GetMapping("/user/updatePassword")
-	public String updatePasswordPage(Model model) {
-		return "user/updatePassword";
-	}
-	
 	@GetMapping("/user/resendRegistrationToken")
     public ModelAndView resendRegistrationToken(final HttpServletRequest request, @RequestParam("token") final String existingToken) {
         final VerificationToken newToken = userService.generateNewVerificationToken(existingToken);

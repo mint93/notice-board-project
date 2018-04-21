@@ -28,7 +28,7 @@
     	<div class="panel panel-info">
 	        <div class="panel-heading">
 	            <div class="panel-title" th:text="#{registration.label.title}">Register new account</div>
-	            <div id="loginlink"><a href="#" th:href="@{/user/login}" th:text="#{registration.link.login}">Login</a></div>
+	            <div id="loginlink"><a href="#" th:href="@{/login}" th:text="#{registration.link.login}">Login</a></div>
 	        </div>
             <div class="panel-body" >
 	            <form id="registerform" class="form-horizontal" action="#" th:action="@{/user/registration}" th:object="${user}" method="post">

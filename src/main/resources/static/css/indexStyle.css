@@ -1,0 +1,23 @@
+body{
+    background: #fff;
+}
+
+.navbar, .dropdown-menu{
+	background:#09ba32;
+	border: none;
+}
+
+.nav>li>a, .dropdown-menu>li>a:focus, .dropdown-menu>li>a:hover, .dropdown-menu>li>a, .dropdown-menu>li{
+	border-bottom: 3px solid transparent;
+}
+
+.nav>li>a:focus, .nav>li>a:hover, .nav .open>a, .nav .open>a:focus, .nav .open>a:hover, .dropdown-menu>li>a:focus, .dropdown-menu>li>a:hover{
+	border-bottom: 3px solid transparent;
+	background: rgba(154, 154, 154, 0.27);
+}
+
+.navbar a, .dropdown-menu>li>a, .dropdown-menu>li>a:focus, .dropdown-menu>li>a:hover, .navbar-toggle{
+	color: #fff;
+}
+
+
