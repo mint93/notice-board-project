@@ -7,8 +7,10 @@
 	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"></link>
   	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
   	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+  	<link rel="stylesheet" type="text/css" media="all"  th:href="@{/css/headerStyle.css}"  href="../css/headerStyle.css" />
 </head>
 <body>
+	<div th:replace="fragments/header :: header"></div>
 	<div class="container">
 		<div class="col-md-6 col-md-offset-3">
 		    <h1 class="alert alert-danger" th:text="${message}">Error Message</h1>

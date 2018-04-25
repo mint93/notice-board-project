@@ -9,28 +9,7 @@
   	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
   	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
   	
-  	<style type="text/css">
-		body{
-		    background: #fff;
-		    padding-top: 60px;
-		}
-		.navbar, .dropdown-menu{
-			background: #47cb66;
-			border: none;
-		}
-		.nav>li>a, .dropdown-menu>li>a:focus, .dropdown-menu>li>a:hover, .dropdown-menu>li>a, .dropdown-menu>li{
-			border-bottom: 3px solid transparent;
-		}
-		.nav>li>a:focus, .nav>li>a:hover, .nav .open>a, .nav .open>a:focus, .nav .open>a:hover, .dropdown-menu>li>a:focus, .dropdown-menu>li>a:hover{
-			border-bottom: 3px solid transparent;
-			background: #2ca348;
-		}
-		.navbar a, .dropdown-menu>li>a, .dropdown-menu>li>a:focus, .dropdown-menu>li>a:hover, .navbar-toggle{
-			color: #fff;
-		}
-  	
-  	
-  	
+  	<style type="text/css">  	
   		.panel-body {
   			padding-top:30px
   		}
@@ -47,7 +26,7 @@
   			top:-10px
   		}
   	</style>
-  	
+  	<link rel="stylesheet" type="text/css" media="all"  th:href="@{/css/headerStyle.css}"  href="../css/headerStyle.css" />
 </head>
 <body>
 	<div th:replace="fragments/header :: header"></div>

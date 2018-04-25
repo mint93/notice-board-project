@@ -11,6 +11,7 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.authentication.logout.LogoutSuccessHandler;
 
 @Configuration
 @EnableWebSecurity
@@ -19,12 +20,15 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 	@Autowired
 	private UserDetailsService userDetailsService;
 	
+	@Autowired
+	private LogoutSuccessHandler customLogoutSuccessHandler;
+	
 	@Override
 	protected void configure(HttpSecurity http) throws Exception {
 		http
 			.csrf().disable()
 			.authorizeRequests()
-				.antMatchers("/h2-console/**", "/user/registration", "/user/successRegister", "/user/badToken", "/user/badUser", "/user/emailError", "/user/forgotPassword", "/login", "/resources/**")
+				.antMatchers("/h2-console/**", "/user/registration", "/user/successRegister", "/user/badToken", "/user/badUser", "/user/emailError", "/user/forgotPassword", "/login")
 				.permitAll()
 				.antMatchers("/user/updatePassword*", "/user/savePassword*")
 				.hasAuthority("CHANGE_PASSWORD_PRIVILEGE")
@@ -37,7 +41,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 				.permitAll()
 			.and()
 			.logout()
-				.logoutSuccessUrl("/?logoutSucc=true")
+				.logoutSuccessHandler(customLogoutSuccessHandler)
+				.invalidateHttpSession(true)
 				.deleteCookies("JSESSIONID")
 				.permitAll();
 		//prevent blank page after logging into the H2 console

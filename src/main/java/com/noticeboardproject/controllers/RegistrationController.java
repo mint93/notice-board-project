@@ -105,7 +105,7 @@ public class RegistrationController {
 	}
 	
 	
-	@GetMapping(value = "/user/registrationConfirm")
+	@GetMapping("/user/registrationConfirm")
 	public ModelAndView confirmRegistration(WebRequest request, Model model, @RequestParam("token") String token) {
 		
 	    VerificationToken verificationToken = userService.getVerificationToken(token);
