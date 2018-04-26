@@ -14,6 +14,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
+import com.noticeboardproject.domain.Privilege;
 import com.noticeboardproject.domain.Role;
 import com.noticeboardproject.domain.User;
 import com.noticeboardproject.repositories.UserRepository;
@@ -46,12 +47,28 @@ public class CustomUserDetailsService implements UserDetailsService {
           getAuthorities(user.getRoles()));
     }
     
-    //for now only Role functionality
-    private static List<GrantedAuthority> getAuthorities(Set<Role> roles) {
-    	List<GrantedAuthority> authorities = new ArrayList<>();
-    	for(Role role : roles) {
-    		authorities.add(new SimpleGrantedAuthority(role.getRole()));
-    	}
+    private List<GrantedAuthority> getAuthorities(Set<Role> roles) {
+        return getGrantedAuthorities(getPrivileges(roles));
+    }
+ 
+    private List<String> getPrivileges(Set<Role> roles) {
+  
+        List<String> privileges = new ArrayList<>();
+        List<Privilege> collection = new ArrayList<>();
+        for (Role role : roles) {
+            collection.addAll(role.getPrivileges());
+        }
+        for (Privilege privilege : collection) {
+            privileges.add(privilege.getPrivilege());
+        }
+        return privileges;
+    }
+ 
+    private List<GrantedAuthority> getGrantedAuthorities(List<String> privileges) {
+        List<GrantedAuthority> authorities = new ArrayList<>();
+        for (String privilege : privileges) {
+            authorities.add(new SimpleGrantedAuthority(privilege));
+        }
         return authorities;
     }
 }

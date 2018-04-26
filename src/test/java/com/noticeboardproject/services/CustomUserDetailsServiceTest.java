@@ -7,8 +7,6 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.when;
 
-import java.util.Arrays;
-import java.util.HashSet;
 import java.util.stream.Collectors;
 
 import org.junit.Before;
@@ -19,6 +17,7 @@ import org.mockito.MockitoAnnotations;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 
+import com.noticeboardproject.domain.Privilege;
 import com.noticeboardproject.domain.Role;
 import com.noticeboardproject.domain.User;
 import com.noticeboardproject.repositories.UserRepository;
@@ -48,16 +47,19 @@ public class CustomUserDetailsServiceTest {
 	
 	@Test
 	public void givenExistingEmail_whenLoadUserByUserName_thenReturnUser() {
+		Privilege privilege1 = new Privilege();
+		privilege1.setPrivilege("privilege1");
+		Privilege privilege2 = new Privilege();
+		privilege2.setPrivilege("privilege2");
 		Role role1 = new Role();
 		role1.setRole("role1");
-		Role role2 = new Role();
-		role2.setRole("role2");
-		HashSet<Role> roles = new HashSet<>(Arrays.asList(role1, role2));
+		role1.getPrivileges().add(privilege1);
+		role1.getPrivileges().add(privilege2);
 		
 		User user = new User();
 		user.setEmail(EMAIL);
 		user.setPassword(PASSWORD);
-		user.setRoles(roles);
+		user.getRoles().add(role1);
 		user.setEnabled(ENABLED);
 		
 		when(userRepository.findByEmail(any(String.class))).thenReturn(user);
@@ -65,10 +67,13 @@ public class CustomUserDetailsServiceTest {
 		assertEquals(user.getEmail(), userDetail.getUsername());
 		assertEquals(user.getPassword(), userDetail.getPassword());
 		assertEquals(user.getRoles().stream()
-							.map(role -> role.getRole())
+							.flatMap(role -> role.getPrivileges().stream())
+							.map(privelege -> privelege.getPrivilege())
+							.sorted()
 							.collect(Collectors.toList()), 
 					 userDetail.getAuthorities().stream()
 							.map(authority -> authority.getAuthority())
+							.sorted()
 							.collect(Collectors.toList()));
 		assertEquals(user.isEnabled(), userDetail.isEnabled());
 		assertEquals(true, userDetail.isCredentialsNonExpired());

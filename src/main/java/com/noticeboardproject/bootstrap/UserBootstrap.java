@@ -7,10 +7,12 @@ import org.springframework.context.event.ContextRefreshedEvent;
 import org.springframework.stereotype.Component;
 
 import com.noticeboardproject.commands.UserCommand;
+import com.noticeboardproject.domain.Privilege;
 import com.noticeboardproject.domain.Role;
 import com.noticeboardproject.domain.User;
 import com.noticeboardproject.domain.VerificationToken;
 import com.noticeboardproject.exceptions.EmailExistsException;
+import com.noticeboardproject.repositories.PrivilegeRepository;
 import com.noticeboardproject.repositories.RoleRepository;
 import com.noticeboardproject.services.UserService;
 
@@ -19,16 +21,24 @@ public class UserBootstrap implements ApplicationListener<ContextRefreshedEvent>
 
 	private final RoleRepository roleRepository;
 	
+	private final PrivilegeRepository privilegeRepository;
+	
 	private final UserService userService;
 
-	public UserBootstrap(RoleRepository roleRepository, UserService userService) {
+	public UserBootstrap(RoleRepository roleRepository, PrivilegeRepository privilegeRepository, UserService userService) {
 		this.roleRepository = roleRepository;
+		this.privilegeRepository = privilegeRepository;
 		this.userService = userService;
 	}
 
 	@Override
 	public void onApplicationEvent(ContextRefreshedEvent contextRefreshedEvent) {
+		Privilege privilege1 = new Privilege();
+		privilege1.setPrivilege("READ_PRIVILEGE");
+		privilegeRepository.save(privilege1);
+		
 		Role roleUser = new Role();
+		roleUser.getPrivileges().add(privilege1);
 		roleUser.setRole("ROLE_USER");
 		roleRepository.save(roleUser);
 		
