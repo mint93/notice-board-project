@@ -4,15 +4,98 @@
 
 <head>
 	<meta charset="utf-8">
-	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"></link>
-  	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
-  	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js" type="text/javascript"></script>
+	<script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.23/jquery-ui.min.js" type="text/javascript"></script>
+	<link rel='stylesheet' href='https://ajax.googleapis.com/ajax/libs/jqueryui/1.7.2/themes/ui-lightness/jquery-ui.css' />
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css" />
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+	
+	
   	<link rel="stylesheet" type="text/css" media="all"  th:href="@{/css/headerStyle.css}"  href="../css/headerStyle.css" />
+  	<link rel="stylesheet" type="text/css" media="all"  th:href="@{/css/autocompleteStyle.css}"  href="../css/autocompleteStyle.css" />
+  	<script th:src="@{/js/autocomplete.js}" src="../js/autocomplete.js" type="text/javascript"></script>
+<style>
+
+.search .form-section{
+	background: #6191dd;
+	border: 2px solid #414141;
+	border-radius: 5px;
+	padding: 5px 0px 75px 0px;
+}
+
+#noticeSearch {
+    color:#333;
+    display:block;
+    float:left;
+    font-family:Helvetica, Arial, sans-serif;
+    font-weight:bold;
+    font-size:12px;
+    padding:5px 10px;
+    text-decoration:none;
+    border:1px solid #CCC;
+    margin:20px;
+    border-radius:3px;
+    white-space: nowrap;
+    width: 100%;
+}
+
+#searchButton {
+	white-space: nowrap;
+    width: 100%;
+    position: relative;
+    bottom: 3px;
+}
+
+</style>  
 </head>
 <body>
 <div th:replace="fragments/header :: header"></div>
 
-Content
+	<div class="container">
+		<div class="search">
+			<div class="row">
+				<div class="col-md-10 col-md-offset-1">
+					<div class="form-section">
+						<form role="form">
+							<div class="col-md-6">
+								<div class="form-group">
+									<input type=text th:placeholder="${searchMessage}" id="noticeSearch" onfocus="this.placeholder = ''" th:onblur="'this.placeholder = \'' + ${searchMessage} + '\''"></input>
+								</div>
+							</div>
+							<div class="col-md-4">
+								<div class="form-group">
+									<div id="citySearchForm">
+										<input type="text" id="citySearch" value="Polska"></input>
+										<div id="dropdown">
+
+											<a th:each="state : ${states}" th:id="${state.state}"
+												th:inline="text">[[${state.state}]]<i
+												class="pull-right glyphicon glyphicon-triangle-right"></i>
+											</a>
+
+										</div>
+										<div id="subdropdown">
+											<div th:each="state : ${states}"
+												th:id="${'subdropdown-' + state.state}">
+												<a th:each="city : ${state.cities}" th:text="${city}">City
+													name</a>
+											</div>
+										</div>
+									</div>
+
+								</div>
+							</div>
+							<div class="col-md-2">
+								<br>
+								<button type="submit" class="btn btn-default btn-primary" id="searchButton">Search</button>
+							</div>
+						</form>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
 </body>
 
 </html>

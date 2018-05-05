@@ -23,5 +23,6 @@ body{
 
 #logo{
 	position: relative;
-	bottom: 13px
+	bottom: 13px;
+	left: 50px;
 }

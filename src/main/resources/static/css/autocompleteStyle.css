@@ -1,0 +1,91 @@
+.container {
+    position:relative;
+}
+
+#citySearch {
+    color:#333;
+    display:block;
+    float:left;
+    font-family:Helvetica, Arial, sans-serif;
+    font-weight:bold;
+    font-size:12px;
+    padding:5px 10px;
+    text-decoration:none;
+    border:1px solid #CCC;
+    margin:20px;
+    border-radius:3px;
+    white-space: nowrap;
+    width: 100%;
+}
+
+#dropdown {
+    display:none;
+    background:#F8F8F8;
+    border:1px solid #CCC;
+    box-shadow:0 1px 3px rgba(0,0,0,0.15);
+    position:absolute;
+    top:46px;
+    left:35px;
+    border-radius:3px;
+}
+
+#dropdown a {
+    color:#333;
+    display:block;
+    padding:5px 10px;
+    font-family:Helvetica, Arial, sans-serif;
+    font-size:12px;
+    text-decoration:none;
+}
+
+#dropdown a:hover {
+    background:#333;
+    color:#FFF;
+}
+
+.pac-icon:empty{
+    display: none !important;
+}
+
+.ui-menu{
+    background:#F8F8F8;
+    border:1px solid #CCC;
+    box-shadow:0 1px 3px rgba(0,0,0,0.15);
+    position:relative;
+    border-radius:3px;
+    list-style-type: none;
+    float: left;
+    margin: 0;
+    padding: 0px;
+    width: 200px;
+}
+
+.ui-menu-item a{
+    color:#333;
+    display:block;
+    padding:5px 10px;
+    font-family:Helvetica, Arial, sans-serif;
+    font-size:12px;
+    text-decoration:none;
+}
+
+.ui-menu-item a:hover{
+    background:#333;
+    color:#FFF;
+    text-decoration: none;
+    background-image: none;
+    border: 1px solid lightgray;
+}
+
+.ui-widget-content .ui-state-hover, .ui-widget-content .ui-state-active {
+    border: 1px solid lightgray;
+    background-image: none;
+    background:#333;
+    color: #FFF;
+    text-decoration: none;
+}
+
+.ui-corner-all
+{
+    border-radius: 0;
+}
