@@ -1,5 +1,7 @@
 package com.noticeboardproject.controllers;
 
+import java.security.Principal;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Locale;
@@ -14,6 +16,9 @@ import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.MessageSource;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -185,6 +190,18 @@ public class RegistrationController {
         userCommand.setEmail(securityUserService.getPasswordResetTokenByToken(token).getUser().getEmail());
         redirectAttributes.addFlashAttribute("user", userCommand);
         return new RedirectView("updatePassword");
+	}
+	
+	@GetMapping("/user/changePasswordForLoggedUser")
+    public ModelAndView showChangePasswordPageForLoggedUser(final Locale locale, final Model model, HttpServletRequest request, Principal principal) {
+		User loggedUser = userService.findUserByEmail(principal.getName());
+		final Authentication auth = new UsernamePasswordAuthenticationToken(loggedUser, null, Arrays.asList(new SimpleGrantedAuthority("CHANGE_PASSWORD_PRIVILEGE")));
+	    SecurityContextHolder.getContext().setAuthentication(auth);
+		
+        UserCommand userCommand = new UserCommand();
+        userCommand.setEmail(loggedUser.getEmail());
+        model.addAttribute("user", userCommand);
+        return new ModelAndView("user/updatePassword");
 	}
 	
 	@PostMapping("/user/savePassword")

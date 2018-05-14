@@ -18,3 +18,5 @@ An application that allows you to view and add offers to buy / sell items, creat
 * Junit
 * Mockito
 * Thymeleaf
+* Javascript, JQuery
+* HTML, CSS

@@ -344,7 +344,25 @@ public class RegistrationControllerIntegrationTest {
 		verifyNoMoreInteractions(userService);
 	}
 	
+	@Test
+	public void givenLoggedUser_whenChangePassword_thenShowUpdatePasswordView() throws Exception{
+		User user = new User();
+		user.setEmail("email@gmail.com");
+		
+		when(userService.findUserByEmail(anyString())).thenReturn(user);
+		
+		mockMvc.perform(get("/user/changePasswordForLoggedUser")
+				.with(csrf())
+				.contentType(MediaType.APPLICATION_FORM_URLENCODED))
+		.andExpect(status().isOk())
+		.andExpect(view().name("user/updatePassword"))
+		.andExpect(model().attribute("user", hasProperty("email", is(user.getEmail()))));
+		
+		verify(userService, times(1)).findUserByEmail(anyString());
+		verifyNoMoreInteractions(userService);
+	}
+	
 	private void setAuthenticationToken() {
-	    SecurityContextHolder.getContext().setAuthentication(new UsernamePasswordAuthenticationToken(null, null, Arrays.asList(new SimpleGrantedAuthority("ROLE_USER"))));
+	    SecurityContextHolder.getContext().setAuthentication(new UsernamePasswordAuthenticationToken(new User(), null, Arrays.asList(new SimpleGrantedAuthority("ROLE_USER"))));
 	}
 }

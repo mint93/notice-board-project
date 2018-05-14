@@ -30,7 +30,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 			.authorizeRequests()
 				.antMatchers("/h2-console/**", "/user/registration", "/user/successRegister", "/user/badToken", "/user/badUser", "/user/emailError", "/user/forgotPassword", "/login", "/index", "/")
 				.permitAll()
-				.antMatchers("/user/updatePassword*", "/user/savePassword*")
+				.antMatchers("/user/updatePassword*", "/user/savePassword*", "/user/changePasswordForLoggedUser/*")
 				.hasAuthority("CHANGE_PASSWORD_PRIVILEGE")
 			.and()
 			.formLogin()

@@ -22,8 +22,9 @@
                     	<li><a sec:authorize="isAnonymous()" href="#" th:href="@{/login}">My account</a></li>
                         <li class="dropdown"><a sec:authorize="isAuthenticated()" href="#" class="dropdown-toggle active" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">My account<span class="caret"></span></a>
                             <ul class="dropdown-menu">
-                                <li><a href="#">Change Password</a></li>
+                                <li><a href="#" th:href="@{/user/changePasswordForLoggedUser}">Change Password</a></li>
                                 <li><a href="#">My Profile</a></li>
+                                <li class="divider"></li>
                                 <li><a href="#" th:href="@{/logout}">Logout</a></li>
                             </ul>
                         </li>
