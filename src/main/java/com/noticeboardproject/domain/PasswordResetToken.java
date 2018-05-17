@@ -91,6 +91,6 @@ public class PasswordResetToken {
 	@Override
 	public String toString() {
 		return String.format("PasswordResetToken [token=%s, expiryDate=%s]", token, expiryDate);
-	}    
+	}
     
 }
