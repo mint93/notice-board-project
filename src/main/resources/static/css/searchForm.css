@@ -1,0 +1,29 @@
+.search .form-section{
+	background: #6191dd;
+	border: 2px solid #414141;
+	border-radius: 5px;
+	padding: 5px 0px 75px 0px;
+}
+
+#noticeSearch {
+    color:#333;
+    display:block;
+    float:left;
+    font-family:Helvetica, Arial, sans-serif;
+    font-weight:bold;
+    font-size:12px;
+    padding:5px 10px;
+    text-decoration:none;
+    border:1px solid #CCC;
+    margin:20px;
+    border-radius:3px;
+    white-space: nowrap;
+    width: 100%;
+}
+
+#searchButton {
+	white-space: nowrap;
+    width: 100%;
+    position: relative;
+    bottom: 3px;
+}

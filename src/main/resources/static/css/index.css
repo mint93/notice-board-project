@@ -1,0 +1,17 @@
+.cat-group {
+	margin: 10px 0;
+}
+
+.cat {
+	margin-top: 15px;
+}
+
+#cat a:hover{
+	background:#6191dd;
+    color:#FFF;	
+}
+#cat a{
+    color:#6191dd;
+    font-size: 16px;
+    text-decoration: none;
+}

@@ -14,6 +14,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.MessageSource;
 import org.springframework.context.support.MessageSourceAccessor;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -21,6 +22,8 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
+
+import com.noticeboardproject.services.CategoryService;
 
 @RunWith(SpringRunner.class)
 @WebMvcTest(IndexController.class)
@@ -34,6 +37,8 @@ public class IndexControllerIntegrationTest {
 	
 	private MessageSourceAccessor accessorMessages;
 	
+	@MockBean
+	CategoryService categoryService;
 	
 	@Before
 	public void setUp() throws Exception {

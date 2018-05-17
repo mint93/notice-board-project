@@ -82,6 +82,7 @@ $(document).ready(function () {
         $('#subdropdown-' + id).css("left", left + "px");
         $('#subdropdown-' + id).css("top", top + "px");
         $('#subdropdown-' + id).css("width", "200px");
+        $('#subdropdown-' + id).css("z-index", "10");
         $('#subdropdown').children().hide()
         $('#subdropdown-' + id).show();
 

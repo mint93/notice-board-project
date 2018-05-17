@@ -12,40 +12,12 @@
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 	
 	
-  	<link rel="stylesheet" type="text/css" media="all"  th:href="@{/css/headerStyle.css}"  href="../css/headerStyle.css" />
-  	<link rel="stylesheet" type="text/css" media="all"  th:href="@{/css/autocompleteStyle.css}"  href="../css/autocompleteStyle.css" />
-  	<script th:src="@{/js/autocomplete.js}" src="../js/autocomplete.js" type="text/javascript"></script>
+  	<link rel="stylesheet" type="text/css" media="all"  th:href="@{/css/header.css}"  href="../css/header.css" />
+  	<link rel="stylesheet" type="text/css" media="all"  th:href="@{/css/cityForm.css}"  href="../css/cityForm.css" />
+  	<link rel="stylesheet" type="text/css" media="all"  th:href="@{/css/searchForm.css}"  href="../css/searchForm.css" />
+  	<link rel="stylesheet" type="text/css" media="all"  th:href="@{/css/index.css}"  href="../css/index.css" />
+  	<script th:src="@{/js/cityForm.js}" src="../js/cityForm.js" type="text/javascript"></script>
 <style>
-
-.search .form-section{
-	background: #6191dd;
-	border: 2px solid #414141;
-	border-radius: 5px;
-	padding: 5px 0px 75px 0px;
-}
-
-#noticeSearch {
-    color:#333;
-    display:block;
-    float:left;
-    font-family:Helvetica, Arial, sans-serif;
-    font-weight:bold;
-    font-size:12px;
-    padding:5px 10px;
-    text-decoration:none;
-    border:1px solid #CCC;
-    margin:20px;
-    border-radius:3px;
-    white-space: nowrap;
-    width: 100%;
-}
-
-#searchButton {
-	white-space: nowrap;
-    width: 100%;
-    position: relative;
-    bottom: 3px;
-}
 
 </style>  
 </head>
@@ -92,6 +64,23 @@
 							</div>
 						</form>
 					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	
+	<div class="container">
+		<div class="row">
+			<div class="col-md-10 col-md-offset-1">
+				<h3 class="text-center" th:text="#{index.label.categories}">Categories</h3>
+				<div class="cat-group">
+				<div class="row">
+					<div class="cat col-md-3 col-lg-3 col-xl-3" id="cat" th:each="category : ${categories}">
+						<label for="radio-button-0">
+							<a class="frb-title" href="#" th:href="@{/search(category=${category})}" th:text="#{'index.categories.' + ${category}}">Category</a>
+						</label>
+					</div>
+				</div>
 				</div>
 			</div>
 		</div>
