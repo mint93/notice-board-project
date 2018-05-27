@@ -14,6 +14,8 @@ import javax.persistence.JoinColumn;
 import javax.persistence.Lob;
 import javax.persistence.ManyToOne;
 
+import org.springframework.lang.Nullable;
+
 import lombok.Getter;
 import lombok.Setter;
 
@@ -40,7 +42,16 @@ public class Notice {
 	private Category category;
 	
 	@Lob
-	private Byte[] image;
+	@Nullable
+	private Byte[] mainImage;
+	
+	@Lob
+	@Nullable
+	private Byte[] image1;
+	
+	@Lob
+	@Nullable
+	private Byte[] image2;
 
 	@ManyToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name = "user_id")

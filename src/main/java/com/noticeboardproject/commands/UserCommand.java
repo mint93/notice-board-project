@@ -8,10 +8,12 @@ import com.noticeboardproject.validators.PasswordMatches;
 import com.noticeboardproject.validators.ValidEmail;
 
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Getter
 @Setter
+@NoArgsConstructor
 @PasswordMatches
 public class UserCommand {
 

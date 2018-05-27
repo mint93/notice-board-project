@@ -25,7 +25,7 @@ public class Category {
 	@Column(unique=true, nullable=false)
 	private Long id;
 
-	private String category;
+	private CategoryEnum category;
 	
 	@OneToMany(mappedBy = "category", fetch=FetchType.LAZY)
 	private Set<Notice> notices;
@@ -61,13 +61,11 @@ public class Category {
 		if (getClass() != obj.getClass())
 			return false;
 		Category other = (Category) obj;
-		if (category == null) {
-			if (other.category != null)
-				return false;
-		} else if (!category.equals(other.category))
+		if (category != other.category)
 			return false;
 		return true;
 	}
+    
     
 }
 

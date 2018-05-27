@@ -32,6 +32,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 				.permitAll()
 				.antMatchers("/user/updatePassword*", "/user/savePassword*", "/user/changePasswordForLoggedUser/*")
 				.hasAuthority("CHANGE_PASSWORD_PRIVILEGE")
+				.antMatchers("/addNewNotice")
+				.authenticated()
 			.and()
 			.formLogin()
 				.loginPage("/login")

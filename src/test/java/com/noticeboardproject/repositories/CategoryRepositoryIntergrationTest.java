@@ -14,6 +14,7 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import com.noticeboardproject.domain.Category;
+import com.noticeboardproject.domain.CategoryEnum;
 import com.noticeboardproject.domain.Notice;
 
 @RunWith(SpringRunner.class)
@@ -39,7 +40,7 @@ public class CategoryRepositoryIntergrationTest {
 		notice2.setDescription("description2");
 		
 		category = new Category();
-		category.setCategory("category");
+		category.setCategory(CategoryEnum.AUTOMOTIVE);
 		
 		noticeRepository.saveAll(Arrays.asList(notice1, notice2));
 		category.addNotice(notice1);
@@ -49,7 +50,7 @@ public class CategoryRepositoryIntergrationTest {
 	}
 
 	@Test
-	public void findByCategory_shouldntContainNotices() {
+	public void findByCategoryTest() {
 		Category foundCategory = categoryRepository.findByCategory(category.getCategory());
 		assertEquals(category, foundCategory);
 		Set<Notice> notices = foundCategory.getNotices();

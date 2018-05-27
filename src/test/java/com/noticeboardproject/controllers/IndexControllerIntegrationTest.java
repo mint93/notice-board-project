@@ -6,7 +6,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
 
-import java.util.Arrays;
 import java.util.Locale;
 
 import org.junit.Before;
@@ -17,13 +16,13 @@ import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.MessageSource;
 import org.springframework.context.support.MessageSourceAccessor;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 
+import com.noticeboardproject.config.IntegrationTestConfig;
 import com.noticeboardproject.services.CategoryService;
+import com.noticeboardproject.storage.StorageService;
 
 @RunWith(SpringRunner.class)
 @WebMvcTest(IndexController.class)
@@ -40,9 +39,12 @@ public class IndexControllerIntegrationTest {
 	@MockBean
 	CategoryService categoryService;
 	
+	@MockBean
+	StorageService storageService;
+	
 	@Before
 	public void setUp() throws Exception {
-		SecurityContextHolder.getContext().setAuthentication(new UsernamePasswordAuthenticationToken(null, null, Arrays.asList(new SimpleGrantedAuthority("ROLE_USER"))));
+		IntegrationTestConfig.setAuthenticationToken(SecurityContextHolder.getContext());
 		accessorMessages = new MessageSourceAccessor(messages, Locale.ENGLISH);
 	}
 	

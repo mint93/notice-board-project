@@ -1,0 +1,91 @@
+p {
+  font-size: 18px;
+}
+
+.uploader {
+  display: block;
+  width: 100%;
+  max-width: 300px;
+}
+.uploader label {
+  float: left;
+  clear: both;
+  width: 100%;
+  padding: 2rem 1.5rem;
+  text-align: center;
+  background: #fff;
+  border: 3px solid #eee;
+  transition: all .2s ease;
+}
+.uploader label:hover {
+  border-color: #454cad;
+}
+.uploader .start {
+  float: left;
+  clear: both;
+  width: 100%;
+}
+.uploader .start.hidden {
+  display: none;
+}
+
+.uploader .close.hidden {
+  display: none;
+}
+.uploader .start i.fas {
+  font-size: 50px;
+  margin-bottom: 1rem;
+}
+.uploader .close i.fa {
+  font-size: 30px;
+  clear: both;
+  float: left;
+  margin-right: 100px;
+}
+.uploader .close i.fa:hover {
+  color: #ff0000;
+}
+.uploader .response {
+  float: left;
+  clear: both;
+  width: 100%;
+}
+.uploader .response.hidden {
+  display: none;
+}
+.uploader .response .messages {
+  margin-bottom: .5rem;
+}
+.uploader .file-image {
+  display: inline;
+  margin: 0 auto .5rem auto;
+  width: auto;
+  height: auto;
+  max-width: 180px;
+}
+.uploader .file-image.hidden {
+  display: none;
+}
+.uploader .notimage {
+  display: block;
+  float: left;
+  clear: both;
+  width: 100%;
+}
+.uploader .notimage.hidden {
+  display: none;
+}
+
+.uploader input[type="file"] {
+  display: none;
+}
+.uploader div {
+  margin: 0 0 .5rem 0;
+  color: #5f6982;
+}
+fieldset {
+	padding-bottom: 50px;
+}
+#main-image-text{
+	padding-right: 40px;
+}

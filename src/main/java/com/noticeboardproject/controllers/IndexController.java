@@ -3,7 +3,6 @@ package com.noticeboardproject.controllers;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
@@ -12,6 +11,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.context.request.WebRequest;
 
+import com.noticeboardproject.domain.CategoryEnum;
 import com.noticeboardproject.services.CategoryService;
 
 import lombok.Getter;
@@ -30,7 +30,8 @@ public class IndexController {
 	public String showRegistrationFrom(Model model, WebRequest request) {
 		List<State> states = generateStates();
 		model.addAttribute("states", states);
-		model.addAttribute("categories", categoryService.getAllCategories().stream().map(cat -> cat.getCategory()).collect(Collectors.toList()));
+		//model.addAttribute("categories", categoryService.getAllCategories().stream().map(cat -> cat.getCategory()).collect(Collectors.toList()));
+		model.addAttribute("categories", CategoryEnum.values());
 		model.addAttribute("searchMessage", messages.getMessage("index.placeholder.search", null, request.getLocale()));
 		return "index";
 	}

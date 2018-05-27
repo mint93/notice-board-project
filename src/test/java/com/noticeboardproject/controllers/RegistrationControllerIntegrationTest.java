@@ -45,13 +45,16 @@ import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 
 import com.noticeboardproject.commands.UserCommand;
+import com.noticeboardproject.config.IntegrationTestConfig;
 import com.noticeboardproject.domain.PasswordResetToken;
 import com.noticeboardproject.domain.User;
 import com.noticeboardproject.domain.VerificationToken;
 import com.noticeboardproject.exceptions.EmailExistsException;
 import com.noticeboardproject.listeners.RegistrationListener;
+import com.noticeboardproject.services.CategoryService;
 import com.noticeboardproject.services.SecurityUserService;
 import com.noticeboardproject.services.UserService;
+import com.noticeboardproject.storage.StorageService;
 
 @RunWith(SpringRunner.class)
 @WebMvcTest(RegistrationController.class)
@@ -59,6 +62,9 @@ public class RegistrationControllerIntegrationTest {
 
 	@Autowired
 	private MockMvc mockMvc;
+	
+	@MockBean
+	private CategoryService categoryService;
 	
 	@MockBean
 	private UserService userService;
@@ -77,9 +83,12 @@ public class RegistrationControllerIntegrationTest {
 	@MockBean
 	SecurityUserService securityUserService;
 	
+	@MockBean
+	StorageService storageService;
+	
 	@Before
 	public void setUp() throws Exception {
-		setAuthenticationToken();
+		IntegrationTestConfig.setAuthenticationToken(SecurityContextHolder.getContext());
 		accessorMessages = new MessageSourceAccessor(messages, Locale.ENGLISH);
 	}
 	
@@ -360,9 +369,5 @@ public class RegistrationControllerIntegrationTest {
 		
 		verify(userService, times(1)).findUserByEmail(anyString());
 		verifyNoMoreInteractions(userService);
-	}
-	
-	private void setAuthenticationToken() {
-	    SecurityContextHolder.getContext().setAuthentication(new UsernamePasswordAuthenticationToken(new User(), null, Arrays.asList(new SimpleGrantedAuthority("ROLE_USER"))));
 	}
 }
