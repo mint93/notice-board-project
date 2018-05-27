@@ -17,11 +17,15 @@ import lombok.Synchronized;
 @Component
 public class NoticeCommandToNotice implements Converter<NoticeCommand, Notice>{
 
-	@Autowired
 	private CategoryService categoryService;
 	
-	@Autowired
 	private StorageService storageService;
+	
+	@Autowired
+	public NoticeCommandToNotice(CategoryService categoryService, StorageService storageService) {
+		this.categoryService = categoryService;
+		this.storageService = storageService;
+	}
 	
 	@Synchronized
 	@Nullable
