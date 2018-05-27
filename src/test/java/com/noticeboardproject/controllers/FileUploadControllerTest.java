@@ -19,14 +19,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.core.io.ClassPathResource;
+import org.springframework.core.io.ByteArrayResource;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
-import com.google.common.io.ByteStreams;
 import com.noticeboardproject.config.IntegrationTestConfig;
 import com.noticeboardproject.storage.StorageException;
 import com.noticeboardproject.storage.StorageFileNotFoundException;
@@ -91,11 +90,11 @@ public class FileUploadControllerTest {
     
     @Test
     public void shouldDownloadFile() throws Exception {
-    	ClassPathResource resource = new ClassPathResource("testUpload.txt", getClass());
-    	when(storageService.loadAsResource(anyString(), anyString())).thenReturn(resource);
+    	byte[] resourceByteArray = new byte[] {0, 1, 2};
+    	when(storageService.loadAsResource(anyString(), anyString())).thenReturn(new ByteArrayResource(resourceByteArray));
     	mockMvc.perform(get("/files/test.png"))
     	.andExpect(status().isOk())
-    	.andExpect(content().bytes(ByteStreams.toByteArray(resource.getInputStream())));
+    	.andExpect(content().bytes(resourceByteArray));
     	
     	verify(storageService, times(1)).loadAsResource(anyString(), anyString());
     }
