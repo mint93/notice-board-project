@@ -143,7 +143,7 @@ function fire_ajax_submit(file, uploader) {
 
 			if(data.match("^Successfully uploaded - ")) {
 				var imageName = data.substring(24, data.length);
-				uploader.find('.file-image').attr({src:"files/" + imageName});
+				uploader.find('.file-image').attr({src:"../files/" + imageName});
 			}
 		}
 	});

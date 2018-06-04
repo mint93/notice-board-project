@@ -17,6 +17,7 @@ public class NoticeCommand {
 	private String description;
 	private Integer price;
 	private Integer views;
+	private Integer phoneNumber;
 	private Date creationDate;
 	private String city;
 	private String state;

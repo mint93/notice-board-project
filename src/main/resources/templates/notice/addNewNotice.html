@@ -25,7 +25,7 @@
 	<div class="container">
 		<div class="row">
 			<div class="col-md-10 col-md-offset-1">
-				<form class="form-horizontal" action="#" th:action="@{/addNewNotice}" th:object="${noticeCommand}" method="post">
+				<form class="form-horizontal" action="#" th:action="@{/notice/new}" th:object="${noticeCommand}" method="post">
 					<fieldset>
 						<legend th:text="#{addNewNotice.label.addNewNotice}">Add New Notice</legend>
 						<div class="form-group">
@@ -51,6 +51,7 @@
 								<input name="price" class="form-control input-md" id="price"
 									type="number" th:field="*{price}">
 							</div>
+							<span>zł</span>
 						</div>
 						<div class="form-group">
 							<label class="col-md-3 control-label" for="description" th:text="#{addNewNotice.label.description}">Descripction</label>
@@ -140,7 +141,7 @@
 								Number</label>
 							<div class="col-md-4">
 								<input name="phone-number" class="form-control input-md"
-									id="phone-number" type="tel">
+									id="phone-number" type="tel" th:field="*{phoneNumber}">
 							</div>
 						</div>
 						<div class="form-group">

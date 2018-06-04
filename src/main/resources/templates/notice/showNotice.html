@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org">
+
+<head>
+	<meta charset="utf-8">
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js" type="text/javascript"></script>
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" />
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.13/css/all.css">
+	
+	
+  	<link rel="stylesheet" type="text/css" media="all"  th:href="@{/css/header.css}"  href="../css/header.css" />
+  	<link rel="stylesheet" type="text/css" media="all"  th:href="@{/css/showNotice.css}"  href="../css/showNotice.css" />
+  	<script th:src="@{/js/showNotice.js}" src="../js/showNotice.js" type="text/javascript"></script>
+<style>
+
+</style>  
+</head>
+<body>
+	<div th:replace="fragments/header :: header"></div>
+
+	<div class="container">
+		<div class="notice">
+				<div class="wrapper row">
+					<div class="preview col-md-9">
+						
+						<div class="preview-pic tab-content">
+						  <div class="tab-pane active" id="pic-1"><img th:src="${notice.mainImage != null} ? @{'/notice/' + ${notice.id} + '/mainImage'} : @{/img/no-image.png}" /></div>
+						  <div class="tab-pane" id="pic-2"><img th:src="${notice.image1 != null} ? @{'/notice/' + ${notice.id} + '/image1'} : @{/img/no-image.png}" /></div>
+						  <div class="tab-pane" id="pic-3"><img th:src="${notice.image2 != null} ? @{'/notice/' + ${notice.id} + '/image2'} : @{/img/no-image.png}" /></div>
+						</div>
+            
+						<ul class="preview-thumbnail nav nav-tabs">
+						  <li class="active"><a data-target="#pic-1" data-toggle="tab"><img th:src="${notice.mainImage != null} ? @{'/notice/' + ${notice.id} + '/mainImage'} : @{/img/no-image.png}" /></a></li>
+						  <li><a data-target="#pic-2" data-toggle="tab"><img th:src="${notice.image1 != null} ? @{'/notice/' + ${notice.id} + '/image1'} : @{/img/no-image.png}" /></a></li>
+						  <li><a data-target="#pic-3" data-toggle="tab"><img th:src="${notice.image2 != null} ? @{'/notice/' + ${notice.id} + '/image2'} : @{/img/no-image.png}" /></a></li>
+						</ul>
+						
+						<h3 class="product-title" th:text="${notice.title}">Title</h3>
+						<p class="product-description" th:text="${notice.description}">Description.</p>
+						<p class="views" th:text="${notice.views}">Views: 100</p>
+					</div>
+          
+          
+					<div class="details col-md-3">
+						<h4 class="price">Price: <span th:text="${notice.price}">180</span> zł</h4>
+					 	<div id="phone-number" class="contact-details">
+         					<span class="glyphicon glyphicon-earphone"></span><span class="glyphicon-text" th:text="${notice.phoneNumber}">123456</span>
+       					</div>
+       					<div id="author-email" class="contact-details">
+				        	<span class="glyphicon glyphicon-envelope"></span><span class="glyphicon-text" th:text="${notice.user.email}">123456</span>
+				        </div>
+						<div>
+							<a id="author-notices" href="#" class="btn btn-info btn-lg">All user's notices</a>
+						</div>
+					</div>
+       					
+					</div>
+				</div>
+			</div>
+</body>
+
+</html>

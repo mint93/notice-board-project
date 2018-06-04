@@ -39,6 +39,7 @@ public class NoticeCommandToNotice implements Converter<NoticeCommand, Notice>{
 		notice.setDescription(noticeCommand.getDescription());
 		notice.setPrice(noticeCommand.getPrice());
 		notice.setViews(noticeCommand.getViews());
+		notice.setPhoneNumber(noticeCommand.getPhoneNumber());
 		notice.setCreationDate(noticeCommand.getCreationDate());
 		notice.setCity(noticeCommand.getCity());
 		notice.setState(noticeCommand.getState());

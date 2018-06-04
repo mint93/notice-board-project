@@ -3,7 +3,6 @@ package com.noticeboardproject.controllers;
 import static org.hamcrest.Matchers.is;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
-import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
@@ -32,6 +31,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import com.noticeboardproject.commands.NoticeCommand;
 import com.noticeboardproject.config.IntegrationTestConfig;
 import com.noticeboardproject.domain.CategoryEnum;
+import com.noticeboardproject.domain.Notice;
 import com.noticeboardproject.domain.User;
 import com.noticeboardproject.services.CategoryService;
 import com.noticeboardproject.services.NoticeService;
@@ -39,8 +39,8 @@ import com.noticeboardproject.services.UserService;
 import com.noticeboardproject.storage.StorageService;
 
 @RunWith(SpringRunner.class)
-@WebMvcTest(AddNewNoticeController.class)
-public class AddNewNoticeControllerIntegrationTest {
+@WebMvcTest(NoticeController.class)
+public class NoticeControllerIntegrationTest {
 
 	@Autowired
 	MockMvc mockMvc;
@@ -67,12 +67,12 @@ public class AddNewNoticeControllerIntegrationTest {
 		User user = new User();
 		when(userService.findUserByEmail(anyString())).thenReturn(user);
 		
-		mockMvc.perform(get("/addNewNotice")
+		mockMvc.perform(get("/notice/new")
 				.with(csrf())
 				.contentType(MediaType.APPLICATION_FORM_URLENCODED)
 				.header(HttpHeaders.ACCEPT_LANGUAGE, Locale.ENGLISH.toLanguageTag()))
 		.andExpect(status().isOk())
-		.andExpect(view().name("addNewNotice"))
+		.andExpect(view().name("notice/addNewNotice"))
 		.andExpect(model().attributeExists("noticeCommand"))
 		.andExpect(model().attribute("user", is(user)))
 		.andExpect(model().attribute("categories", is(CategoryEnum.values())))
@@ -85,19 +85,37 @@ public class AddNewNoticeControllerIntegrationTest {
 	@Test
 	public void addNewNotice() throws Exception {
 		User userSessionAttr = new User();
-		doNothing().when(noticeService).saveNoticeCommand(any(NoticeCommand.class));
+		Notice savedNotice = new Notice();
+		savedNotice.setId(1L);
+		when(noticeService.saveNoticeCommand(any(NoticeCommand.class))).thenReturn(savedNotice);
 		
-		mockMvc.perform(post("/addNewNotice")
+		mockMvc.perform(post("/notice/new")
 				.with(csrf())
 				.contentType(MediaType.APPLICATION_FORM_URLENCODED)
 				.sessionAttr("user", userSessionAttr)
 				.header(HttpHeaders.ACCEPT_LANGUAGE, Locale.ENGLISH.toLanguageTag()))
 		.andExpect(status().is3xxRedirection())
-		.andExpect(view().name("redirect:/"))
+		.andExpect(view().name("redirect:/notice/" + savedNotice.getId() + "/show"))
 		.andExpect(model().attributeExists("noticeCommand", "user"))
 		.andExpect(model().hasNoErrors());
 		
 		verify(noticeService, times(1)).saveNoticeCommand(any());
+		verifyNoMoreInteractions(noticeService);
+	}
+	
+	@Test
+	public void showNoticeById() throws Exception {
+		Notice notice = new Notice();
+		when(noticeService.findById(any())).thenReturn(notice);
+		
+		mockMvc.perform(get("/notice/1/show")
+			.with(csrf())
+			.contentType(MediaType.APPLICATION_FORM_URLENCODED))
+		.andExpect(status().isOk())
+		.andExpect(view().name("notice/showNotice"))
+		.andExpect(model().attribute("notice", is(notice)));
+		
+		verify(noticeService, times(1)).findById(1L);
 		verifyNoMoreInteractions(noticeService);
 	}
 	

@@ -1,7 +1,10 @@
 package com.noticeboardproject.services;
 
 import com.noticeboardproject.commands.NoticeCommand;
+import com.noticeboardproject.domain.Notice;
 
 public interface NoticeService {
-	void saveNoticeCommand(NoticeCommand noticeCommand);
+	Notice saveNoticeCommand(NoticeCommand noticeCommand);
+
+	Notice findById(Long id);
 }
