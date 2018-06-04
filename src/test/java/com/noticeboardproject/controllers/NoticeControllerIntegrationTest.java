@@ -57,6 +57,8 @@ public class NoticeControllerIntegrationTest {
 	@MockBean
 	StorageService storageService;
 	
+	private final String EMAIL = "email@gmail.com";
+	
 	@Before
 	public void setUp() throws Exception {
 		IntegrationTestConfig.setAuthenticationToken(SecurityContextHolder.getContext());
@@ -105,7 +107,10 @@ public class NoticeControllerIntegrationTest {
 	
 	@Test
 	public void showNoticeById() throws Exception {
+		User user = new User();
+		user.setEmail(EMAIL);
 		Notice notice = new Notice();
+		notice.setUser(user);
 		when(noticeService.findById(any())).thenReturn(notice);
 		
 		mockMvc.perform(get("/notice/1/show")
