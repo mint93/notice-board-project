@@ -69,7 +69,7 @@ public class NoticeCommandToNoticeTest {
 		noticeCommand.setCreationDate(CREATION_DATE);
 		noticeCommand.setCity(CITY);
 		noticeCommand.setState(STATE);
-		noticeCommand.setCategoryEnum(CATEGORY);
+		noticeCommand.setCategoryEnumName(CATEGORY.toString());
 		noticeCommand.setUser(user);
 		noticeCommand.setMainImageName(MAIN_IMAGE_NAME);
 		noticeCommand.setImage1Name(IMAGE1_NAME);

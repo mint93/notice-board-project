@@ -28,7 +28,7 @@ public class NoticeToNoticeCommand implements Converter<Notice, NoticeCommand>{
 		noticeCommand.setCreationDate(notice.getCreationDate());
 		noticeCommand.setCity(notice.getCity());
 		noticeCommand.setState(notice.getState());
-		noticeCommand.setCategoryEnum(notice.getCategory().getCategory());
+		noticeCommand.setCategoryEnumName(notice.getCategory().getCategory().toString());
 		noticeCommand.setUser(notice.getUser());
 		
 		return noticeCommand;

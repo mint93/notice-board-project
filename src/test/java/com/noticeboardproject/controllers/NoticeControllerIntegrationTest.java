@@ -58,6 +58,10 @@ public class NoticeControllerIntegrationTest {
 	StorageService storageService;
 	
 	private final String EMAIL = "email@gmail.com";
+	private final String TITLE = "title";
+	private final String DESCRIPTION = "description";
+	private final Integer PRICE = 10;
+	private final String PHONE_NUMBER = "+48123123123";
 	
 	@Before
 	public void setUp() throws Exception {
@@ -94,6 +98,11 @@ public class NoticeControllerIntegrationTest {
 		mockMvc.perform(post("/notice/new")
 				.with(csrf())
 				.contentType(MediaType.APPLICATION_FORM_URLENCODED)
+				.param("title", TITLE)
+				.param("description", DESCRIPTION)
+				.param("price", PRICE.toString())
+				.param("phoneNumber", PHONE_NUMBER)
+				.param("categoryEnumName", CategoryEnum.AUTOMOTIVE.toString())
 				.sessionAttr("user", userSessionAttr)
 				.header(HttpHeaders.ACCEPT_LANGUAGE, Locale.ENGLISH.toLanguageTag()))
 		.andExpect(status().is3xxRedirection())

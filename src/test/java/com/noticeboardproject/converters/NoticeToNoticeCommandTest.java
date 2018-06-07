@@ -66,7 +66,7 @@ public class NoticeToNoticeCommandTest {
 		assertEquals(CREATION_DATE, noticeCommand.getCreationDate());
 		assertEquals(CITY, noticeCommand.getCity());
 		assertEquals(STATE, noticeCommand.getState());
-		assertEquals(category.getCategory(), noticeCommand.getCategoryEnum());
+		assertEquals(category.getCategory(), CategoryEnum.valueOf(noticeCommand.getCategoryEnumName()));
 		assertEquals(user, noticeCommand.getUser());		
 	}
 }

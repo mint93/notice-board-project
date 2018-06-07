@@ -2,9 +2,12 @@ package com.noticeboardproject.controllers;
 
 import java.security.Principal;
 
+import javax.validation.Valid;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -44,7 +47,12 @@ public class NoticeController {
 	}
 	
 	@PostMapping("/notice/new")
-	public String AddNewNotice(Model model, @ModelAttribute("noticeCommand") NoticeCommand noticeCommand, @ModelAttribute("user") User user) {
+	public String AddNewNotice(Model model, @ModelAttribute("noticeCommand") @Valid NoticeCommand noticeCommand, BindingResult bindingResult, @ModelAttribute("user") User user) {
+		if (bindingResult.hasErrors()) {
+			model.addAttribute("categories", CategoryEnum.values());
+			return "notice/addNewNotice";
+		}
+		
 		noticeCommand.setUser(user);
 		Notice savedNotice = noticeService.saveNoticeCommand(noticeCommand);
 		return "redirect:/notice/" + savedNotice.getId() + "/show";

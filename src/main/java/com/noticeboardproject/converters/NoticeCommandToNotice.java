@@ -8,6 +8,7 @@ import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Component;
 
 import com.noticeboardproject.commands.NoticeCommand;
+import com.noticeboardproject.domain.CategoryEnum;
 import com.noticeboardproject.domain.Notice;
 import com.noticeboardproject.services.CategoryService;
 import com.noticeboardproject.storage.StorageService;
@@ -43,7 +44,7 @@ public class NoticeCommandToNotice implements Converter<NoticeCommand, Notice>{
 		notice.setCreationDate(noticeCommand.getCreationDate());
 		notice.setCity(noticeCommand.getCity());
 		notice.setState(noticeCommand.getState());
-		notice.setCategory(categoryService.getCategoryByCategory(noticeCommand.getCategoryEnum()));
+		notice.setCategory(categoryService.getCategoryByCategory(CategoryEnum.valueOf(noticeCommand.getCategoryEnumName())));
 		notice.setUser(noticeCommand.getUser());
 		notice.setMainImage(storageService.loadAsByteArray(noticeCommand.getMainImageName(), noticeCommand.getUser().getEmail()));
 		notice.setImage1(storageService.loadAsByteArray(noticeCommand.getImage1Name(), noticeCommand.getUser().getEmail()));
