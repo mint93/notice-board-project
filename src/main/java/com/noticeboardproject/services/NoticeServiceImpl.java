@@ -34,6 +34,11 @@ public class NoticeServiceImpl implements NoticeService{
 	}
 	
 	@Override
+	public Notice saveOrUpdateNotice(Notice notice) {
+		return noticeRepository.save(notice);
+	}
+	
+	@Override
 	public Notice findById(Long id) {
 		Optional<Notice> noticeOptional = noticeRepository.findById(id);
 

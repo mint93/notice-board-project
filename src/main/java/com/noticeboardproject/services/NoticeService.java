@@ -7,4 +7,6 @@ public interface NoticeService {
 	Notice saveNoticeCommand(NoticeCommand noticeCommand);
 
 	Notice findById(Long id);
+
+	Notice saveOrUpdateNotice(Notice notice);
 }

@@ -1,7 +1,6 @@
 package com.noticeboardproject.domain;
 
 
-import java.util.Calendar;
 import java.util.Date;
 
 import javax.persistence.Column;
@@ -59,8 +58,10 @@ public class Notice {
 	private User user;
 
 	public Notice() {
-		Calendar calendar = Calendar.getInstance();
-		creationDate = calendar.getTime();
+	}
+	
+	public void incrementViews() {
+		this.views += 1;
 	}
 	
 	@Override
@@ -87,5 +88,6 @@ public class Notice {
 			return false;
 		return true;
 	}
+
 	
 }

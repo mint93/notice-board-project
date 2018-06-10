@@ -38,13 +38,16 @@
 						</ul>
 						
 						<h3 class="product-title" th:text="${notice.title}">Title</h3>
+						<p id="creation-date" th:text="#{showNotice.label.creationDate} + ${notice.creationDate}">Added at 01-01-2018 15:00</p>
 						<p class="product-description" th:text="${notice.description}">Description.</p>
-						<p class="views" th:text="${notice.views}">Views: 100</p>
+						<p class="views" id="views" th:text="#{showNotice.label.views} + ${notice.views}">Views: 100</p>
 					</div>
           
           
 					<div class="details col-md-3">
-						<h4 class="price">Price: <span th:text="${notice.price}">180</span> zł</h4>
+						<h4 class="price" th:inline="text">
+						[[#{showNotice.lable.price}]]
+						<span th:text="${notice.price}">180</span> zł</h4>
 					 	<div id="phone-number" class="contact-details">
          					<span class="glyphicon glyphicon-earphone"></span><span class="glyphicon-text" th:text="${notice.phoneNumber}">123456</span>
        					</div>
@@ -52,7 +55,7 @@
 				        	<span class="glyphicon glyphicon-envelope"></span><span class="glyphicon-text" th:text="${notice.user.email}">123456</span>
 				        </div>
 						<div>
-							<a id="author-notices" href="#" class="btn btn-info btn-lg">All user's notices</a>
+							<a id="author-notices" href="#" class="btn btn-info btn-lg" th:text="#{showNotice.label.allUserNotices}">All user's notices</a>
 						</div>
 					</div>
        					

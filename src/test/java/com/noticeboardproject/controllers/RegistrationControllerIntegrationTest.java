@@ -240,7 +240,7 @@ public class RegistrationControllerIntegrationTest {
 		.andExpect(model().attribute("user", hasProperty("email", is(exisitngEmail))))
 		.andExpect(model().attribute("user", hasProperty("password", is(password))))
 		.andExpect(model().attribute("user", hasProperty("matchingPassword", is(matchingPassword))))
-		.andExpect(model().attributeHasFieldErrorCode("user", "email", accessorMessages.getMessage("message.emailExists")))
+		.andExpect(model().attributeHasFieldErrorCode("user", "email", "message.emailExists"))
 		.andExpect(model().attributeErrorCount("user", 1))
 		.andExpect(model().errorCount(1));
 		

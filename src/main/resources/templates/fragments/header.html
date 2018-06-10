@@ -19,16 +19,16 @@
                 </div>
                 <div id="navbar" class="navbar-collapse collapse">
                     <ul class="nav navbar-nav pull-right">
-                    	<li><a sec:authorize="isAnonymous()" href="#" th:href="@{/login}">My account</a></li>
-                        <li class="dropdown"><a sec:authorize="isAuthenticated()" href="#" class="dropdown-toggle active" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">My account<span class="caret"></span></a>
+                    	<li><a sec:authorize="isAnonymous()" href="#" th:href="@{/login}" th:text="#{header.label.myAccount}">My account</a></li>
+                        <li class="dropdown"><a sec:authorize="isAuthenticated()" href="#" class="dropdown-toggle active" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false" th:text="#{header.label.myAccount}">My account<span class="caret"></span></a>
                             <ul class="dropdown-menu">
-                                <li><a href="#" th:href="@{/user/changePasswordForLoggedUser}">Change Password</a></li>
-                                <li><a href="#">My Profile</a></li>
+                                <li><a href="#" th:href="@{/user/changePasswordForLoggedUser}" th:text="#{header.label.changePassword}">Change Password</a></li>
+                                <li><a href="#" th:text="#{header.label.myProfile}">My Profile</a></li>
                                 <li class="divider"></li>
-                                <li><a href="#" th:href="@{/logout}">Logout</a></li>
+                                <li><a href="#" th:href="@{/logout}" th:text="#{header.label.logout}">Logout</a></li>
                             </ul>
                         </li>
-                        <li><a href="#" th:href="@{/notice/new}">Add new notice</a></li>
+                        <li><a href="#" th:href="@{/notice/new}" th:text="#{header.label.addNewNotice}">Add new notice</a></li>
                     </ul>
                 </div>
             </div>

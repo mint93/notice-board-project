@@ -54,8 +54,7 @@ public class UserServiceImpl implements UserService {
 	@Override
     public UserCommand registerNewUserCommand(final UserCommand userCommand) throws EmailExistsException {
         if (emailExist(userCommand.getEmail())) {
-        	throw new EmailExistsException("There is an account with that email adress: "
-                    +  userCommand.getEmail());
+        	throw new EmailExistsException("An account for this email already exists");
         }
         final User user = userCommandToUser.convert(userCommand);
         user.setPassword(passwordEncoder.encode(userCommand.getPassword()));

@@ -86,7 +86,7 @@ public class RegistrationController {
 			try {
 		        registeredUserCommand = userService.registerNewUserCommand(userCommand);
 		    } catch (EmailExistsException e) {
-		    	result.rejectValue("email", messages.getMessage("message.emailExists", null, request.getLocale()));
+		    	result.rejectValue("email", "message.emailExists");
 		    }
 		}
 		

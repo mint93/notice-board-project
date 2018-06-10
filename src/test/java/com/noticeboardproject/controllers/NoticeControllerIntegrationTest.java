@@ -119,8 +119,11 @@ public class NoticeControllerIntegrationTest {
 		User user = new User();
 		user.setEmail(EMAIL);
 		Notice notice = new Notice();
+		notice.setViews(0);
 		notice.setUser(user);
+		notice.setMainImage(null);
 		when(noticeService.findById(any())).thenReturn(notice);
+		when(noticeService.saveOrUpdateNotice(any())).thenReturn(notice);
 		
 		mockMvc.perform(get("/notice/1/show")
 			.with(csrf())
@@ -130,6 +133,7 @@ public class NoticeControllerIntegrationTest {
 		.andExpect(model().attribute("notice", is(notice)));
 		
 		verify(noticeService, times(1)).findById(1L);
+		verify(noticeService, times(1)).saveOrUpdateNotice(notice);
 		verifyNoMoreInteractions(noticeService);
 	}
 	

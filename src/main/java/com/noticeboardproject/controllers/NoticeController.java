@@ -1,6 +1,7 @@
 package com.noticeboardproject.controllers;
 
 import java.security.Principal;
+import java.util.Calendar;
 
 import javax.validation.Valid;
 
@@ -54,13 +55,18 @@ public class NoticeController {
 		}
 		
 		noticeCommand.setUser(user);
+		noticeCommand.setCreationDate(Calendar.getInstance().getTime());
+		noticeCommand.setViews(0);
 		Notice savedNotice = noticeService.saveNoticeCommand(noticeCommand);
 		return "redirect:/notice/" + savedNotice.getId() + "/show";
 	}
 	
 	@GetMapping("/notice/{id}/show")
 	public String showNoticeById(@PathVariable String id, Model model) {
-		model.addAttribute("notice", noticeService.findById(new Long(id)));
+		Notice foundNotice = noticeService.findById(new Long(id));
+		foundNotice.incrementViews();
+		Notice updatedNotice = noticeService.saveOrUpdateNotice(foundNotice);
+		model.addAttribute("notice", updatedNotice);
 		return "notice/showNotice";
 	}
 	

@@ -89,3 +89,12 @@ img {
 .glyphicon-text {
 	padding-left: 5px;
 }
+
+#views {
+	margin-top: 60px;
+	margin-bottom: 0px;
+	font-size: 12px;
+}
+#creation-date{
+	font-size: 12px;
+}
