@@ -30,7 +30,9 @@ public class NoticeCommand {
 	@Pattern(regexp="^(([\\+]?[0-9]{11})|([0-9]{9}))")
 	private String phoneNumber;
 	private Date creationDate;
+	@NotBlank
 	private String city;
+	@NotBlank(message="{message.selectCityFromList}")
 	private String state;
 	@NotEmpty
 	private String categoryEnumName;

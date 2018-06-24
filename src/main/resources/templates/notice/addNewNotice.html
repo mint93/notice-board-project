@@ -5,6 +5,7 @@
 <head>
 	<meta charset="utf-8">
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js" type="text/javascript"></script>
+	<script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.23/jquery-ui.min.js" type="text/javascript"></script>
 	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" />
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.13/css/all.css">
@@ -13,7 +14,7 @@
   	<link rel="stylesheet" type="text/css" media="all"  th:href="@{/css/header.css}"  href="../css/headerStyle.css" />
   	<link rel="stylesheet" type="text/css" media="all"  th:href="@{/css/cityForm.css}"  href="../css/cityForm.css" />
   	<link rel="stylesheet" type="text/css" media="all"  th:href="@{/css/fileUpload.css}"  href="../css/fileUpload.css" />
-  	<!-- <script th:src="@{/js/cityForm.js}" src="../js/cityForm.js" type="text/javascript"></script> -->
+  	<script th:src="@{/js/cityAutocomplete.js}" src="../js/cityAutocomplete.js" type="text/javascript"></script>
   	<script th:src="@{/js/fileUpload.js}" src="../js/fileUpload.js" type="text/javascript"></script>
 <style>
 
@@ -133,6 +134,15 @@
 					</fieldset>
 					<fieldset>
 						<legend th:text="#{addNewNotice.label.contactDetails}">Contact Details</legend>
+						<div class="form-group">
+							<label class="col-md-3 control-label" for="city" th:text="#{addNewNotice.label.location}">Your location</label>
+							<div class="col-md-4">
+								<input class="form-control input-md" type="text" id="city" th:field="*{city}"></input>
+								<input type="hidden" value="" id="state" th:field="*{state}"></input>
+								<p class="alert alert-danger" th:if="${#fields.hasErrors('city')}" th:errors="*{city}"></p>
+								<p class="alert alert-danger" th:if="${ #fields.hasErrors('city') == false and #fields.hasErrors('state') == true}" th:errors="*{state}"></p>
+							</div>
+						</div>
 						<div class="form-group">
 							<label class="col-md-3 control-label" for="email" th:text="#{addNewNotice.label.email}">Email</label>
 							<div class="col-md-4">

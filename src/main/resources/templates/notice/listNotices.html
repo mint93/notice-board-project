@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org">
+
+<head>
+	<meta charset="utf-8">
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js" type="text/javascript"></script>
+	<script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.23/jquery-ui.min.js" type="text/javascript"></script>
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" />
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.13/css/all.css">
+	
+	
+  	<link rel="stylesheet" type="text/css" media="all"  th:href="@{/css/header.css}"  href="../css/headerStyle.css" />
+  	<link rel="stylesheet" type="text/css" media="all"  th:href="@{/css/cityForm.css}"  href="../css/cityForm.css" />
+  	<link rel="stylesheet" type="text/css" media="all"  th:href="@{/css/listNotices.css}"  href="../css/listNotices.css" />
+  	<script th:src="@{/js/cityAutocomplete.js}" src="../js/cityAutocomplete.js" type="text/javascript"></script>
+<style>
+
+</style>  
+</head>
+<body>
+<div th:replace="fragments/header :: header"></div>
+
+	<div class="container">
+		<div class="row">
+			<div class="col-md-10 col-md-offset-1" th:if="${notices.totalElements == 0}">
+				<h2 class="alert alert-danger" th:text="#{listNotices.label.NoticesNotFound}">No notices found for this query.</h2>
+			</div>
+		
+			<div class="col-md-10 col-md-offset-1">
+				<div class="row single-notice" th:each="notice : ${notices.content}">
+					<div class="col-md-3">
+						<a th:href="@{'/notice/' + ${notice.id} + '/show'}" href="#">
+							<img th:src="${notice.mainImage != null} ? @{'/notice/' + ${notice.id} + '/mainImage'} : @{/img/no-image.png}" class="img-thumbnail">
+						</a>
+					</div>
+					<div class="info col-md-7">
+						<h4>
+							<a class="title" href="#"
+								th:href="@{'/notice/' + ${notice.id} + '/show'}"
+								th:text="${notice.title}">Title</a>
+						</h4>
+						<p
+							th:text="#{'index.categories.' + ${notice.category.category.category}}">Category</p>
+						<div class="additional-info">
+							<p th:text="${notice.city}">City</p>
+							<p th:text="${notice.creationDate}">Date</p>
+						</div>
+					</div>
+					<div class="col-md-2">
+						<h3 class="price">
+							<span th:text="${notice.price}">180</span> zł
+						</h3>
+					</div>
+					<hr>
+				</div>
+			</div>
+		</div>
+		<div class="col-md-10 col-md-offset-1" th:if="${notices.totalPages > 0}">
+			<ul class="pagination pagination-centered"
+				th:with="urlBuilder=${T(org.springframework.web.servlet.support.ServletUriComponentsBuilder).fromCurrentRequest()}">
+				<li th:class="${notices.first}? 'disabled' : ''"><span
+					th:if="${notices.first}">←</span> <a th:if="${not notices.first}"
+					th:href="${urlBuilder.replaceQueryParam('page', 1).toUriString()}">←</a>
+				</li>
+				<li th:class="${notices.hasPrevious()}? '' : 'disabled'"><span
+					th:if="${not notices.hasPrevious()}">«</span> <a
+					th:if='${notices.hasPrevious()}'
+					th:href="${urlBuilder.replaceQueryParam('page', currentPage - 1).toUriString()}"
+					title='Go to previous page'>«</a></li>
+
+				<th:block th:each="i : ${#numbers.sequence(1, notices.totalPages)}">
+					<li th:class="${i == currentPage}? 'active' : ''"><span
+						th:if="${i == currentPage}" th:text="${i}">1</span>
+						<a th:if="${i != currentPage}"
+						th:href="${urlBuilder.replaceQueryParam('page', i).toUriString()}"><span
+							th:text='${i}'>1</span></a></li>
+				</th:block>
+
+				<li th:class="${notices.hasNext()}? '' : 'disabled'"><span
+					th:if="${not notices.hasNext()}">»</span> <a
+					th:if="${notices.hasNext()}"
+					th:href="${urlBuilder.replaceQueryParam('page', currentPage+1).toUriString()}"
+					title="Go to next page">»</a></li>
+				<li th:class="${notices.last}? 'disabled' : ''"><span
+					th:if="${notices.last}">→</span> <a th:if="${not notices.last}"
+					th:href="${urlBuilder.replaceQueryParam('page', notices.totalPages).toUriString()}">→</a>
+				</li>
+			</ul>
+		</div>
+	</div>
+</body>
+</html>

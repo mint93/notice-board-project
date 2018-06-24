@@ -6,6 +6,8 @@ import java.util.Calendar;
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -13,11 +15,13 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.SessionAttributes;
 
 import com.noticeboardproject.commands.NoticeCommand;
 import com.noticeboardproject.domain.CategoryEnum;
 import com.noticeboardproject.domain.Notice;
+import com.noticeboardproject.domain.SearchBy;
 import com.noticeboardproject.domain.User;
 import com.noticeboardproject.services.NoticeService;
 import com.noticeboardproject.services.UserService;
@@ -29,6 +33,8 @@ public class NoticeController {
 	private NoticeService noticeService;
 	
 	private UserService userService;
+	
+	private final int MAX_NOTICES_PER_PAGE = 10;
 	
 	
 	@Autowired
@@ -68,6 +74,19 @@ public class NoticeController {
 		Notice updatedNotice = noticeService.saveOrUpdateNotice(foundNotice);
 		model.addAttribute("notice", updatedNotice);
 		return "notice/showNotice";
+	}
+	
+	@GetMapping("/search")
+	public String searchNotices(Model model, @RequestParam(defaultValue="1", name="page") int page, @ModelAttribute("searchBy") SearchBy searchBy, @RequestParam(name="category", required=false) CategoryEnum categoryEnum) {
+		searchBy.setCategory(categoryEnum);
+		Page<Notice> notices = noticeService.findBySearchTerm(PageRequest.of(page-1, MAX_NOTICES_PER_PAGE), searchBy);
+		if (page>notices.getSize()) {
+			page = notices.getSize();
+		}
+		model.addAttribute("notices", notices);
+		model.addAttribute("currentPage", page);
+		model.addAttribute("searchBy", searchBy);
+		return "notice/listNotices";
 	}
 	
 }

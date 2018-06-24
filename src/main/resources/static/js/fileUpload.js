@@ -72,7 +72,7 @@ function parseFile(file, uploader) {
 	 output(
 	   '<strong>' + encodeURI(file.name) + '</strong>', uploader.find('.messages')[0]
 	 );
-	 uploader.find('.image-name').attr("value", file.name);
+	 //uploader.find('.image-name').attr("value", file.name);
 	 
 	 var imageName = file.name;
 
@@ -124,7 +124,9 @@ function fire_ajax_submit(file, uploader) {
 	var imageNumber = imageId.substring(imageId.length-1, imageId.length);
 
 	newImageName = preventDuplicateNames(imagesNames, maxImages, imageName);
-
+	
+	uploader.find('.image-name').attr("value", newImageName);
+	
 	imagesNames[imageNumber-1]=newImageName;
 	const newFileName = new File([file], newImageName, {type: file.type});
 	var data = new FormData();

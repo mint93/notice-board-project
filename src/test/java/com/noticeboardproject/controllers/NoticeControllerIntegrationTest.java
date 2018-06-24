@@ -60,6 +60,8 @@ public class NoticeControllerIntegrationTest {
 	private final String EMAIL = "email@gmail.com";
 	private final String TITLE = "title";
 	private final String DESCRIPTION = "description";
+	private final String CITY = "city";
+	private final String STATE = "state";
 	private final Integer PRICE = 10;
 	private final String PHONE_NUMBER = "+48123123123";
 	
@@ -103,6 +105,8 @@ public class NoticeControllerIntegrationTest {
 				.param("price", PRICE.toString())
 				.param("phoneNumber", PHONE_NUMBER)
 				.param("categoryEnumName", CategoryEnum.AUTOMOTIVE.toString())
+				.param("city", CITY)
+				.param("state", STATE)
 				.sessionAttr("user", userSessionAttr)
 				.header(HttpHeaders.ACCEPT_LANGUAGE, Locale.ENGLISH.toLanguageTag()))
 		.andExpect(status().is3xxRedirection())

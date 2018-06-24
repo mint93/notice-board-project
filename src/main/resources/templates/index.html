@@ -29,16 +29,16 @@
 			<div class="row">
 				<div class="col-md-10 col-md-offset-1">
 					<div class="form-section">
-						<form role="form">
+						<form role="form" th:action="@{/search}" th:object="${searchBy}" method="get">
 							<div class="col-md-6">
 								<div class="form-group">
-									<input type=text th:placeholder="${searchMessage}" id="noticeSearch" onfocus="this.placeholder = ''" th:onblur="'this.placeholder = \'' + ${searchMessage} + '\''"></input>
+									<input type=text th:field="*{title}" th:placeholder="${searchMessage}" id="noticeSearch" onfocus="this.placeholder = ''" th:onblur="'this.placeholder = \'' + ${searchMessage} + '\''"></input>
 								</div>
 							</div>
 							<div class="col-md-4">
 								<div class="form-group">
 									<div id="citySearchForm">
-										<input type="text" id="citySearch" value="Polska"></input>
+										<input type="text" th:field="*{city}" id="citySearch" value="Polska"></input>
 										<div id="dropdown">
 
 											<a th:each="state : ${states}" th:id="${state.state}"
@@ -55,7 +55,6 @@
 											</div>
 										</div>
 									</div>
-
 								</div>
 							</div>
 							<div class="col-md-2">
@@ -77,8 +76,8 @@
 				<div class="row">
 					<div class="cat col-md-3 col-lg-3 col-xl-3" id="cat" th:each="category : ${categories}">
 						<label for="radio-button-0">
-							<!-- <a class="frb-title" href="#" th:href="@{/search(category=${category})}" th:text="#{'index.categories.' + ${category.category}}">Category</a> -->
-							<a class="frb-title" href="#" th:text="#{'index.categories.' + ${category.category}}">Category</a>
+							<a class="frb-title" href="#" th:href="@{/search(category=${category})}" th:text="#{'index.categories.' + ${category.category}}">Category</a>
+							<!-- <a class="frb-title" href="#" th:text="#{'index.categories.' + ${category.category}}">Category</a> -->
 						</label>
 					</div>
 				</div>

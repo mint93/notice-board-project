@@ -1,0 +1,47 @@
+hr {
+  border: 0;
+  clear:both;
+  margin: 20px 0px;               
+  background-color:#0000001a;
+  height: 1px;
+  display:block;
+  float:left;
+  width: 100%;
+}
+
+.list-group {
+	border-radius: 0;
+}
+
+.title{
+    color:#6191dd;
+    text-decoration: none;
+    position: relative;
+}
+.title:hover{
+	background:#6191dd;
+    color:#FFF;
+    text-decoration: none;	
+}
+
+.info{
+	height: 200px;
+	padding-left: 0;
+}
+.additional-info {
+	position: absolute;
+  	bottom: 0;
+}
+
+.single-notice {
+	height: 200px;
+}
+.img-thumbnail {
+	display: block;
+	width: 200px;
+	height: 200px;
+}
+.price {
+	float: right;
+}
+

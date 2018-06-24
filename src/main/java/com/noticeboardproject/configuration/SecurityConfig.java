@@ -28,7 +28,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 		http
 			.csrf().disable()
 			.authorizeRequests()
-				.antMatchers("/h2-console/**", "/user/registration", "/user/successRegister", "/user/badToken", "/user/badUser", "/user/emailError", "/user/forgotPassword", "/login", "/index", "/", "/notice/{\\d+}/show")
+				.antMatchers("/h2-console/**", "/user/registration", "/user/successRegister", "/user/badToken", "/user/badUser", "/user/emailError", "/user/forgotPassword", "/login", "/index", "/", "/notice/{\\d+}/show", "/search")
 				.permitAll()
 				.antMatchers("/user/updatePassword*", "/user/savePassword*", "/user/changePasswordForLoggedUser/*")
 				.hasAuthority("CHANGE_PASSWORD_PRIVILEGE")
