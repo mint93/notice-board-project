@@ -8,6 +8,7 @@ import javax.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -22,6 +23,7 @@ import com.noticeboardproject.commands.NoticeCommand;
 import com.noticeboardproject.domain.CategoryEnum;
 import com.noticeboardproject.domain.Notice;
 import com.noticeboardproject.domain.SearchBy;
+import com.noticeboardproject.domain.State;
 import com.noticeboardproject.domain.User;
 import com.noticeboardproject.services.NoticeService;
 import com.noticeboardproject.services.UserService;
@@ -79,10 +81,16 @@ public class NoticeController {
 	@GetMapping("/search")
 	public String searchNotices(Model model, @RequestParam(defaultValue="1", name="page") int page, @ModelAttribute("searchBy") SearchBy searchBy, @RequestParam(name="category", required=false) CategoryEnum categoryEnum) {
 		searchBy.setCategory(categoryEnum);
-		Page<Notice> notices = noticeService.findBySearchTerm(PageRequest.of(page-1, MAX_NOTICES_PER_PAGE), searchBy);
+		searchBy.setSearchByWholeState(State.generateStates().stream()
+			.map(State::getState)
+			.anyMatch(state -> state.equals(searchBy.getCity())));
+		
+		Page<Notice> notices = noticeService.findBySearchTerm(PageRequest.of(page-1, MAX_NOTICES_PER_PAGE, new Sort(Sort.Direction.ASC, "creationDate")), searchBy);
 		if (page>notices.getSize()) {
 			page = notices.getSize();
 		}
+		model.addAttribute("categories", CategoryEnum.values());
+		model.addAttribute("states", State.generateStates());
 		model.addAttribute("notices", notices);
 		model.addAttribute("currentPage", page);
 		model.addAttribute("searchBy", searchBy);

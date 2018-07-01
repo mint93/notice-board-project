@@ -13,6 +13,7 @@
   	<link rel="stylesheet" type="text/css" media="all"  th:href="@{/css/header.css}"  href="../css/header.css" />
   	<link rel="stylesheet" type="text/css" media="all"  th:href="@{/css/showNotice.css}"  href="../css/showNotice.css" />
   	<script th:src="@{/js/showNotice.js}" src="../js/showNotice.js" type="text/javascript"></script>
+  	<script th:src="@{/js/displayDate.js}" src="../js/displayDate.js" type="text/javascript"></script>
 <style>
 
 </style>  
@@ -38,7 +39,7 @@
 						</ul>
 						
 						<h3 class="product-title" th:text="${notice.title}">Title</h3>
-						<p id="creation-date" th:text="#{showNotice.label.creationDate} + ${notice.creationDate}">Added at 01-01-2018 15:00</p>
+						<p class="creation-date-text" th:inline="text">[[#{showNotice.label.creationDate}]]<span id="creation-date" th:text="${notice.creationDate}"></span></p>
 						<p class="product-description" th:text="${notice.description}">Description.</p>
 						<p class="views" id="views" th:text="#{showNotice.label.views} + ${notice.views}">Views: 100</p>
 					</div>

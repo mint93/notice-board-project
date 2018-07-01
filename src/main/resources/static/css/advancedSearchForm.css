@@ -1,0 +1,90 @@
+.search .form-section{
+	background: #6191dd;
+	border: 2px solid #414141;
+	border-radius: 5px;
+	margin-bottom: 20px;
+	padding: 5px 0px 15px 0px;
+}
+
+.search-title { 
+	position: relative; 
+}
+.search-title input { 
+	text-indent: 20px;
+}
+.search-title .fa-search { 
+  position: absolute;
+  top: 26px;
+  left: 20px;
+  font-size: 15px;
+}
+
+#noticeSearch {
+    color:#333;
+    display:block;
+    float:left;
+    font-family:Helvetica, Arial, sans-serif;
+    font-weight:bold;
+    font-size:12px;
+    padding:5px 10px;
+    text-decoration:none;
+    border:1px solid #CCC;
+    margin: 20px 10px;
+    border-radius:3px;
+    white-space: nowrap;
+    width: 100%;
+}
+
+#category {
+    color:#333;
+    display:block;
+    float:left;
+    font-family:Helvetica, Arial, sans-serif;
+    font-weight:bold;
+    font-size:12px;
+    padding:0px 10px;
+    border:1px solid #CCC;
+    margin: 20px 30px;
+    border-radius:3px;
+    white-space: nowrap;
+    height: 28.75px;
+    width: 85%;
+}
+
+#searchButton {
+	white-space: nowrap;
+	display: block;
+    margin: 0px auto;    
+    width: 50%;
+}
+
+.checkbox-description {
+	font-size: 10px;
+	font-weight: normal;
+	margin: 0px 10px;
+	position: relative;
+	bottom: 10px;
+}
+.checkbox-description>input{
+	margin-right: 5px;
+}
+
+.price-range{
+	color:#333;
+    display:block;
+    float:left;
+    font-family:Helvetica, Arial, sans-serif;
+    font-weight:bold;
+    font-size:12px;
+    padding:5px 10px;
+    text-decoration:none;
+    border:1px solid #CCC;
+    margin: 2px 10px;
+    border-radius:3px;
+    white-space: nowrap;
+    width: 50%;
+}
+
+input[type='number'] {
+    -moz-appearance:textfield;
+}

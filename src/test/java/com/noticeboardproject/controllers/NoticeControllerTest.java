@@ -239,6 +239,8 @@ public class NoticeControllerTest {
 		.andExpect(status().isOk())
 		.andExpect(view().name("notice/listNotices"))
 		.andExpect(model().attribute("notices", is(notices)))
+		.andExpect(model().attributeExists("states"))
+		.andExpect(model().attribute("categories", is(CategoryEnum.values())))
 		.andExpect(model().attributeExists("currentPage"))
 		.andExpect(model().attribute("searchBy", hasProperty("title", is(TITLE))))
 		.andExpect(model().attribute("searchBy", hasProperty("city", is(CITY))))

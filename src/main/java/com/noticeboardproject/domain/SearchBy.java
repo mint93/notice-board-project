@@ -10,5 +10,10 @@ import lombok.Setter;
 public class SearchBy {
 	private String title = "";
 	private String city = "";
+	private String priceFrom = "";
+	private String priceTo = "";
+	private boolean searchInDescription;
+	private boolean onlyWithImage;
+	private boolean searchByWholeState;
 	private CategoryEnum category;
 }

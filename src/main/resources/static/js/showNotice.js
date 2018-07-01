@@ -10,6 +10,9 @@ function init() {
 	if(imageThumbnail.find('img').attr('src')=='/img/no-image.png') {
 		imageThumbnail.find('img').addClass('hidden');
 	}
+	
+	var oldDate = document.getElementById("creation-date").innerHTML;
+	document.getElementById("creation-date").innerHTML = displayDate(oldDate);
 }
 
 function imageSelectHandler(e) {

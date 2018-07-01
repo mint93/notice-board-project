@@ -9,14 +9,21 @@ import com.noticeboardproject.domain.Notice;
 public final class NoticeSpecifications {
 	private NoticeSpecifications() {}
 	
-	public static Specification<Notice> titleOrDescriptionContainsIgnoreCase(String searchTerm) {
-        return (root, query, cb) -> {
-            String containsLikePattern = getContainsLikePattern(searchTerm);
-            return cb.or(
-                    cb.like(cb.lower(root.<String>get("title")), containsLikePattern),
-                    cb.like(cb.lower(root.<String>get("description")), containsLikePattern)
-            );
-        };
+	public static Specification<Notice> titleOrDescriptionContainsIgnoreCase(String searchTerm, boolean searchInDescription) {
+        if (searchInDescription) {
+        	return (root, query, cb) -> {
+        		String containsLikePattern = getContainsLikePattern(searchTerm);
+        		return cb.or(
+        				cb.like(cb.lower(root.<String>get("title")), containsLikePattern),
+        				cb.like(cb.lower(root.<String>get("description")), containsLikePattern)
+        				);
+        	};			
+		}else {
+			return (root, query, cb) -> {
+        		String containsLikePattern = getContainsLikePattern(searchTerm);
+        		return cb.like(cb.lower(root.<String>get("title")), containsLikePattern)      				;
+        	};
+		}
     }
  
     private static String getContainsLikePattern(String searchTerm) {
@@ -28,11 +35,17 @@ public final class NoticeSpecifications {
         }
     }
     
-    public static Specification<Notice> cityContainsIgnoreCase(String searchTerm) {
-		return (root, query, cb) -> {
-			String containsLikePattern = getContainsLikePatternForCity(searchTerm);
-			return cb.like(cb.lower(root.<String>get("city")), containsLikePattern);
-		};
+    public static Specification<Notice> cityOrStateContainsIgnoreCase(String searchTerm, boolean searchByState) {
+		if (searchByState) {
+			return (root, query, cb) -> {
+				return cb.like(cb.lower(root.<String>get("state")), searchTerm.toLowerCase());
+			};
+		} else {			
+			return (root, query, cb) -> {
+				String containsLikePattern = getContainsLikePatternForCity(searchTerm);
+				return cb.like(cb.lower(root.<String>get("city")), containsLikePattern);
+			};
+		}
     }
     
     private static String getContainsLikePatternForCity(String searchTerm) {
@@ -54,5 +67,25 @@ public final class NoticeSpecifications {
 				return cb.equal(root.<Category>get("category").<CategoryEnum>get("category"), categoryEnum);
 			};
 		}
+    }
+    
+    public static Specification<Notice> mainImageContains(boolean withImage) {
+    	if (withImage) {
+    		return (root, query, cb) -> {
+    			return cb.isNotNull(root.<Byte[]>get("mainImage"));
+    		};
+		}else {			
+			return (root, query, cb) -> {
+				return cb.or(
+						cb.isNotNull(root.<Byte[]>get("mainImage")),
+						cb.isNull(root.<Byte[]>get("mainImage")));
+			};
+		}
+    }
+    
+    public static Specification<Notice> priceInRange(int from, int to) {
+    	return (root, query, cb) -> {
+    			return cb.between(root.<Integer>get("price"), from, to);
+    	};
     }
 }

@@ -26,3 +26,12 @@ body{
 	bottom: 13px;
 	left: 50px;
 }
+
+#add-new-notice{
+	background-color: #EF871D;
+	border-radius: 7px;
+}
+.fa-plus{
+	position: relative;
+	left: -5px;
+}

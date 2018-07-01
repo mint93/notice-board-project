@@ -95,6 +95,6 @@ img {
 	margin-bottom: 0px;
 	font-size: 12px;
 }
-#creation-date{
+#creation-date, .creation-date-text{
 	font-size: 12px;
 }

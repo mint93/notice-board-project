@@ -1,5 +1,8 @@
 $(document).ready(function () {
     var autocompleteIsOpen = false;
+    if($('#citySearch').val()==""){
+    	$('#citySearch').val('Polska');
+    }
 
     init();
     function init() {
@@ -83,6 +86,8 @@ $(document).ready(function () {
         $('#subdropdown-' + id).css("top", top + "px");
         $('#subdropdown-' + id).css("width", "200px");
         $('#subdropdown-' + id).css("z-index", "10");
+        $('#subdropdown-' + id).css("overflow", "auto");
+        $('#subdropdown-' + id).css("max-height", window.innerHeight-top-70 + "px");
         $('#subdropdown').children().hide()
         $('#subdropdown-' + id).show();
 
@@ -143,7 +148,7 @@ $(document).ready(function () {
                 success: function (data) {
                     response($.map(data.geonames, function (item) {
                         return {
-                            label: item.name + (item.adminName1 ? ", " + item.adminName1 : ""),
+                            label: item.name + (item.adminName1 ? ", " + displayStatesFromGeoNames(item.adminName1) : ""),
                             value: item.name
                         }
                     }));

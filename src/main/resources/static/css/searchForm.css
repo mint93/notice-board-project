@@ -5,6 +5,19 @@
 	padding: 5px 0px 75px 0px;
 }
 
+.search-title { 
+	position: relative; 
+}
+.search-title input { 
+	text-indent: 20px;
+}
+.search-title .fa-search { 
+  position: absolute;
+  top: 26px;
+  left: 28px;
+  font-size: 15px;
+}
+
 #noticeSearch {
     color:#333;
     display:block;

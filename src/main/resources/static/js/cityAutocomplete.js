@@ -20,7 +20,7 @@ $(document).ready(function () {
                 success: function (data) {
                     response($.map(data.geonames, function (item) {
                         return {
-                            label: item.name + (item.adminName1 ? ", " + item.adminName1 : ""),
+                            label: item.name + (item.adminName1 ? ", " + displayStatesFromGeoNames(item.adminName1) : ""),
                             value: item.name
                         }
                     }));

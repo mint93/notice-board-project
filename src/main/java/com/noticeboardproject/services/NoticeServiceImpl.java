@@ -59,10 +59,21 @@ public class NoticeServiceImpl implements NoticeService{
 
 	@Override
 	public Page<Notice> findBySearchTerm(Pageable pageable, SearchBy searchBy) {
-		Specification<Notice> searchNoticeByTitileSpec = NoticeSpecifications.titleOrDescriptionContainsIgnoreCase(searchBy.getTitle());
-		Specification<Notice> searchNoticeByCitySpec = NoticeSpecifications.cityContainsIgnoreCase(searchBy.getCity());
+		int priceFrom = 0;
+		int priceTo = Integer.MAX_VALUE;
+		if (!searchBy.getPriceFrom().equals("")) {
+			priceFrom = Integer.valueOf(searchBy.getPriceFrom());
+		}
+		if (!searchBy.getPriceTo().equals("")) {			
+			priceTo = Integer.valueOf(searchBy.getPriceTo());
+		}
+    	
+		Specification<Notice> searchNoticeByTitileSpec = NoticeSpecifications.titleOrDescriptionContainsIgnoreCase(searchBy.getTitle(), searchBy.isSearchInDescription());
+		Specification<Notice> searchNoticeByCityOrStateSpec = NoticeSpecifications.cityOrStateContainsIgnoreCase(searchBy.getCity(), searchBy.isSearchByWholeState());
 		Specification<Notice> searchNoticeByCategorySpec = NoticeSpecifications.categotyEquals(searchBy.getCategory());
-		return noticeRepository.findAll(Specification.where(searchNoticeByTitileSpec).and(searchNoticeByCitySpec).and(searchNoticeByCategorySpec), pageable);
+		Specification<Notice> searchNoticeWithMainImageOnly = NoticeSpecifications.mainImageContains(searchBy.isOnlyWithImage());
+		Specification<Notice> searchNoticeInPriceRange = NoticeSpecifications.priceInRange(priceFrom, priceTo);
+		return noticeRepository.findAll(Specification.where(searchNoticeByTitileSpec).and(searchNoticeByCityOrStateSpec).and(searchNoticeByCategorySpec).and(searchNoticeWithMainImageOnly).and(searchNoticeInPriceRange), pageable);
 	}
 	
 }
